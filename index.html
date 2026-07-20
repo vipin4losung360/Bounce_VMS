@@ -216,37 +216,76 @@
               <div class="sku-qty-summary">Expected qty: <strong id="expectedQtyDisplay">-</strong></div>
             </div>
 
-            <div class="qc-step hidden" id="qcStepLabel">
-              <div class="qc-step-title">Capture product label</div>
-              <button class="btn btn-secondary btn-full" id="captureLabelBtn">Capture label</button>
-              <div class="snapshot-strip" id="labelThumb"></div>
-            </div>
+            <div class="qc-accordion">
 
-            <div class="qc-step hidden" id="qcStepProduct">
-              <div class="qc-step-title">Product condition</div>
-              <div class="qc-toggle">
-                <div class="qc-toggle-btn" id="productGoodBtn" data-val="true">Good</div>
-                <div class="qc-toggle-btn" id="productBadBtn" data-val="false">Damaged</div>
+              <div class="qc-item hidden" id="stepItem-label" data-step="label">
+                <div class="qc-item-header" onclick="toggleStep('label')">
+                  <span class="qc-item-check" id="check-label"><i class="ti ti-circle-dashed"></i></span>
+                  <span class="qc-item-title">Capture product label</span>
+                  <span class="qc-item-summary" id="summary-label"></span>
+                  <i class="ti ti-chevron-down qc-chevron"></i>
+                </div>
+                <div class="qc-item-body collapsed" id="body-label">
+                  <button class="btn btn-secondary btn-full" id="captureLabelBtn">Capture label</button>
+                  <div class="snapshot-strip" id="labelThumb"></div>
+                </div>
               </div>
+
+              <div class="qc-item hidden" id="stepItem-product" data-step="product">
+                <div class="qc-item-header" onclick="toggleStep('product')">
+                  <span class="qc-item-check" id="check-product"><i class="ti ti-circle-dashed"></i></span>
+                  <span class="qc-item-title">Product condition</span>
+                  <span class="qc-item-summary" id="summary-product"></span>
+                  <i class="ti ti-chevron-down qc-chevron"></i>
+                </div>
+                <div class="qc-item-body collapsed" id="body-product">
+                  <div class="qc-toggle">
+                    <div class="qc-toggle-btn" id="productGoodBtn" data-val="true">Good</div>
+                    <div class="qc-toggle-btn" id="productBadBtn" data-val="false">Damaged</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qc-item hidden" id="stepItem-reasons" data-step="reasons">
+                <div class="qc-item-header" onclick="toggleStep('reasons')">
+                  <span class="qc-item-check" id="check-reasons"><i class="ti ti-circle-dashed"></i></span>
+                  <span class="qc-item-title">Damage reasons</span>
+                  <span class="qc-item-summary" id="summary-reasons"></span>
+                  <i class="ti ti-chevron-down qc-chevron"></i>
+                </div>
+                <div class="qc-item-body collapsed" id="body-reasons">
+                  <div id="damageReasonsList"></div>
+                  <button class="btn btn-primary btn-full" id="reasonsNextBtn" style="margin-top:10px;">Next</button>
+                </div>
+              </div>
+
+              <div class="qc-item hidden" id="stepItem-photos" data-step="photos">
+                <div class="qc-item-header" onclick="toggleStep('photos')">
+                  <span class="qc-item-check" id="check-photos"><i class="ti ti-circle-dashed"></i></span>
+                  <span class="qc-item-title">Condition photos</span>
+                  <span class="qc-item-summary" id="summary-photos"></span>
+                  <i class="ti ti-chevron-down qc-chevron"></i>
+                </div>
+                <div class="qc-item-body collapsed" id="body-photos">
+                  <div class="snapshot-grid" id="productImagesGrid"></div>
+                </div>
+              </div>
+
+              <div class="qc-item hidden" id="stepItem-qty" data-step="qty">
+                <div class="qc-item-header" onclick="toggleStep('qty')">
+                  <span class="qc-item-check" id="check-qty"><i class="ti ti-circle-dashed"></i></span>
+                  <span class="qc-item-title">Quantity breakdown</span>
+                  <span class="qc-item-summary" id="summary-qty"></span>
+                  <i class="ti ti-chevron-down qc-chevron"></i>
+                </div>
+                <div class="qc-item-body collapsed" id="body-qty">
+                  <div id="qtyBreakdownList"></div>
+                </div>
+              </div>
+
             </div>
 
-            <div class="qc-step hidden" id="qcStepReasons">
-              <div class="qc-step-title">Damage reasons</div>
-              <div id="damageReasonsList"></div>
-              <button class="btn btn-primary btn-full" id="reasonsNextBtn" style="margin-top:10px;">Next</button>
-            </div>
-
-            <div class="qc-step hidden" id="qcStepProductImages">
-              <div class="qc-step-title">Condition photos</div>
-              <div class="snapshot-grid" id="productImagesGrid"></div>
-            </div>
-
-            <div class="qc-step hidden" id="qcStepQty">
-              <div class="qc-step-title">Quantity breakdown</div>
-              <div id="qtyBreakdownList"></div>
-            </div>
-
-            <button class="btn btn-primary btn-full hidden" id="submitQCBtn" style="margin-top:10px;">Complete QC</button>
+            <button class="btn btn-primary btn-full hidden" id="submitQCBtn" style="margin-top:14px;">Complete QC</button>
           </div>
         </div>
       </div>
