@@ -64,13 +64,13 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <div class="app-container hidden" id="appContainer">
-  <div class="sidebar">
-    <div class="sidebar-logo">B<span>O</span>UNCE</div>
-    <div class="nav-item active" data-page="receive">Receive</div>
-    <div class="nav-item" data-page="qc">QC</div>
-    <div class="nav-item" data-page="cbp">CBP</div>
-    <div class="nav-item" data-page="reports">Reports</div>
-    <div class="nav-item" data-page="claims">Claims</div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><span class="logo-full">B<span>O</span>UNCE</span><span class="logo-icon">B</span></div>
+    <div class="nav-item active" data-page="receive"><i class="ti ti-truck-delivery"></i><span class="nav-label">Receive</span></div>
+    <div class="nav-item" data-page="qc"><i class="ti ti-checkbox"></i><span class="nav-label">QC</span></div>
+    <div class="nav-item" data-page="cbp"><i class="ti ti-ban"></i><span class="nav-label">CBP</span></div>
+    <div class="nav-item" data-page="reports"><i class="ti ti-chart-bar"></i><span class="nav-label">Reports</span></div>
+    <div class="nav-item" data-page="claims"><i class="ti ti-file-text"></i><span class="nav-label">Claims</span></div>
   </div>
   <div class="main-content">
 
@@ -194,55 +194,60 @@
           <span>QC: <span id="qcTrackingId">-</span></span>
           <button class="btn btn-secondary" id="qcCancelBtn" style="min-height:30px; padding:6px 12px;">Cancel</button>
         </div>
-        <div class="card-body">
-
-          <div style="font-size:12px; color:var(--text-secondary); margin-bottom:14px;">
+        <div class="card-body" style="padding-bottom:8px;">
+          <div style="font-size:12px; color:var(--text-secondary);">
             <span id="qcDocId">-</span> &middot; <span id="qcFCClient">-</span> &middot; <span id="qcMarketplace">-</span>
           </div>
+        </div>
 
-          <div class="sku-box hidden" id="skuBox">
-            <div class="sku-box-title">SKU details <span class="return-type-badge" id="returnTypeBadge"></span></div>
-            <div id="skuList"></div>
-            <div class="sku-qty-summary">Expected qty: <strong id="expectedQtyDisplay">-</strong></div>
-          </div>
-
-          <div class="video-wrap" id="videoWrap">
-            <video id="qcVideo" autoplay muted playsinline></video>
-            <div class="rec-badge hidden" id="recBadge"><span class="rec-dot"></span>recording</div>
-          </div>
-          <button class="btn btn-primary btn-full" id="startCameraBtn" style="margin-top:10px;">Start camera and begin QC</button>
-
-          <div class="qc-step hidden" id="qcStepLabel">
-            <div class="qc-step-title">Capture product label</div>
-            <button class="btn btn-secondary btn-full" id="captureLabelBtn">Capture label</button>
-            <div class="snapshot-strip" id="labelThumb"></div>
-          </div>
-
-          <div class="qc-step hidden" id="qcStepProduct">
-            <div class="qc-step-title">Product condition</div>
-            <div class="qc-toggle">
-              <div class="qc-toggle-btn" id="productGoodBtn" data-val="true">Good</div>
-              <div class="qc-toggle-btn" id="productBadBtn" data-val="false">Damaged</div>
+        <div class="qc-layout">
+          <div class="qc-video-pane">
+            <div class="video-wrap" id="videoWrap">
+              <video id="qcVideo" autoplay muted playsinline></video>
+              <div class="rec-badge hidden" id="recBadge"><span class="rec-dot"></span>recording</div>
             </div>
+            <button class="btn btn-primary btn-full" id="startCameraBtn" style="margin-top:10px;">Start camera and begin QC</button>
           </div>
 
-          <div class="qc-step hidden" id="qcStepReasons">
-            <div class="qc-step-title">Damage reasons</div>
-            <div id="damageReasonsList"></div>
-            <button class="btn btn-primary btn-full" id="reasonsNextBtn" style="margin-top:10px;">Next</button>
-          </div>
+          <div class="qc-right-pane">
+            <div class="sku-box hidden" id="skuBox">
+              <div class="sku-box-title">SKU details <span class="return-type-badge" id="returnTypeBadge"></span></div>
+              <div id="skuList"></div>
+              <div class="sku-qty-summary">Expected qty: <strong id="expectedQtyDisplay">-</strong></div>
+            </div>
 
-          <div class="qc-step hidden" id="qcStepProductImages">
-            <div class="qc-step-title">Condition photos</div>
-            <div class="snapshot-grid" id="productImagesGrid"></div>
-          </div>
+            <div class="qc-step hidden" id="qcStepLabel">
+              <div class="qc-step-title">Capture product label</div>
+              <button class="btn btn-secondary btn-full" id="captureLabelBtn">Capture label</button>
+              <div class="snapshot-strip" id="labelThumb"></div>
+            </div>
 
-          <div class="qc-step hidden" id="qcStepQty">
-            <div class="qc-step-title">Quantity breakdown</div>
-            <div id="qtyBreakdownList"></div>
-          </div>
+            <div class="qc-step hidden" id="qcStepProduct">
+              <div class="qc-step-title">Product condition</div>
+              <div class="qc-toggle">
+                <div class="qc-toggle-btn" id="productGoodBtn" data-val="true">Good</div>
+                <div class="qc-toggle-btn" id="productBadBtn" data-val="false">Damaged</div>
+              </div>
+            </div>
 
-          <button class="btn btn-primary btn-full hidden" id="submitQCBtn" style="margin-top:10px;">Complete QC</button>
+            <div class="qc-step hidden" id="qcStepReasons">
+              <div class="qc-step-title">Damage reasons</div>
+              <div id="damageReasonsList"></div>
+              <button class="btn btn-primary btn-full" id="reasonsNextBtn" style="margin-top:10px;">Next</button>
+            </div>
+
+            <div class="qc-step hidden" id="qcStepProductImages">
+              <div class="qc-step-title">Condition photos</div>
+              <div class="snapshot-grid" id="productImagesGrid"></div>
+            </div>
+
+            <div class="qc-step hidden" id="qcStepQty">
+              <div class="qc-step-title">Quantity breakdown</div>
+              <div id="qtyBreakdownList"></div>
+            </div>
+
+            <button class="btn btn-primary btn-full hidden" id="submitQCBtn" style="margin-top:10px;">Complete QC</button>
+          </div>
         </div>
       </div>
     </div>
