@@ -460,8 +460,34 @@ select.form-input:disabled { background-color: var(--bg-page); color: var(--text
 .rec-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--danger); animation: pulse 1s infinite; }
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-.qc-step { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
-.qc-step-title { font-size: 13px; font-weight: 500; margin-bottom: 10px; }
+.qc-accordion { margin-bottom: 8px; }
+
+.qc-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.qc-item.active { border-color: var(--orange); }
+.qc-item-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.qc-item-header:hover { background: var(--bg-page); }
+.qc-item.active .qc-item-header { background: var(--orange-tint); }
+.qc-item-check i { font-size: 17px; color: var(--text-muted); display: flex; }
+.qc-item.done .qc-item-check i { color: var(--success); }
+.qc-item-title { font-weight: 500; white-space: nowrap; }
+.qc-item-summary { flex: 1; text-align: right; font-size: 11px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qc-chevron { color: var(--text-muted); font-size: 16px; transition: transform 0.15s; flex-shrink: 0; }
+.qc-item.active .qc-chevron { transform: rotate(180deg); }
+.qc-item-body { padding: 0 14px 14px; }
+.qc-item-body.collapsed { display: none; }
 
 .qc-toggle { display: flex; gap: 8px; }
 .qc-toggle-btn {
@@ -498,7 +524,27 @@ select.form-input:disabled { background-color: var(--bg-page); color: var(--text
 .snapshot-slot.captured { border-style: solid; border-color: var(--success); }
 
 .snapshot-strip { display: flex; gap: 8px; margin-top: 8px; }
+.snapshot-strip .snap-thumb { position: relative; width: 56px; height: 56px; }
 .snapshot-strip img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+
+.snap-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--danger);
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0;
+}
+.snap-remove:hover { background: #a01f1f; }
 
 .reason-checkbox {
   display: flex;
