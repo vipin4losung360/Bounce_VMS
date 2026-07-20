@@ -37,7 +37,26 @@
       <button type="submit" class="btn btn-primary btn-full" id="loginBtn">Sign in</button>
       <div class="status-msg" id="loginStatus"></div>
     </form>
+    <div style="text-align:center; margin-top:14px;">
+      <a href="#" id="forgotPasswordLink" style="color:var(--orange); font-size:12px; text-decoration:none;">Forgot password?</a>
+    </div>
   </div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="forgotPasswordModal">
+  <div class="modal-box">
+    <div class="modal-title">Reset password</div>
+    <p style="font-size:12px; color:var(--text-secondary); margin-top:6px;">Enter your username and we'll send a temporary password to your registered email.</p>
+    <div class="form-group">
+      <label class="form-label" for="forgotUsername">Username</label>
+      <input type="text" class="form-input" id="forgotUsername">
+    </div>
+    <div class="status-msg" id="forgotStatus"></div>
+    <div style="display:flex; gap:8px; margin-top:16px;">
+      <button class="btn btn-secondary" style="flex:1;" id="forgotCancelBtn">Cancel</button>
+      <button class="btn btn-primary" style="flex:1;" id="forgotSendBtn">Send reset email</button>
+    </div>
   </div>
 </div>
 
