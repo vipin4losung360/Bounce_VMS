@@ -15,6 +15,7 @@ function showApp(user) {
   document.getElementById("appContainer").classList.remove("hidden");
   document.getElementById("welcomeMsg").textContent =
     "Signed in as " + user.fullName + " (" + user.role + ")";
+  loadMasterData();
 }
 
 function setStatus(msg, type) {
