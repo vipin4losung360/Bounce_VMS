@@ -7,6 +7,16 @@
 document.querySelectorAll(".nav-item").forEach(function (item) {
   item.addEventListener("click", function () {
     const target = item.dataset.page;
+    const leavingQCMidSession = document.getElementById("page-qc").classList.contains("active")
+      && target !== "qc" && typeof QC !== "undefined" && QC.stream;
+
+    if (leavingQCMidSession) {
+      if (!confirm("QC recording is still in progress. Leaving now discards it. Continue?")) return;
+      stopCameraHard();
+      resetQCState();
+      document.getElementById("qcFormCard").classList.add("hidden");
+      document.getElementById("qcScanCard").classList.remove("hidden");
+    }
 
     document.querySelectorAll(".nav-item").forEach(function (n) { n.classList.remove("active"); });
     item.classList.add("active");
