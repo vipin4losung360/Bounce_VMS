@@ -30,10 +30,6 @@ const QC = {
   apiFetched: false
 };
 
-const BOX_IMAGE_TYPES = [
-  ["BOX_TOP", "Top"], ["BOX_FRONT", "Front"], ["BOX_LEFT", "Left"],
-  ["BOX_RIGHT", "Right"], ["BOX_DAMAGE", "Damage close-up"], ["BOX_LABEL", "Label"]
-];
 const PRODUCT_IMAGE_TYPES = [
   ["PROD_TOP", "Top"], ["PROD_FRONT", "Front"], ["PROD_LEFT", "Left"],
   ["PROD_RIGHT", "Right"], ["PROD_DAMAGE", "Damage close-up"], ["PROD_LABEL", "Label"]
@@ -176,27 +172,9 @@ document.getElementById("captureLabelBtn").addEventListener("click", async funct
   btn.disabled = false;
   if (ok) {
     document.getElementById("labelThumb").innerHTML = `<img src="${base64}">`;
-    document.getElementById("qcStepBox").classList.remove("hidden");
-  }
-});
-
-// ---------- Step: box damaged ----------
-document.getElementById("boxDamagedYes").addEventListener("click", function () { setBoxDamaged(true); });
-document.getElementById("boxDamagedNo").addEventListener("click", function () { setBoxDamaged(false); });
-
-function setBoxDamaged(val) {
-  QC.isBoxDamaged = val;
-  document.getElementById("boxDamagedYes").classList.toggle("selected-danger", val === true);
-  document.getElementById("boxDamagedNo").classList.toggle("selected-success", val === false);
-
-  if (val) {
-    renderSnapshotGrid("boxImagesGrid", BOX_IMAGE_TYPES);
-    document.getElementById("qcStepBoxImages").classList.remove("hidden");
-  } else {
-    document.getElementById("qcStepBoxImages").classList.add("hidden");
     document.getElementById("qcStepProduct").classList.remove("hidden");
   }
-}
+});
 
 function renderSnapshotGrid(gridId, types) {
   const grid = document.getElementById(gridId);
@@ -218,11 +196,6 @@ async function captureGridSnapshot(type, gridId) {
 }
 
 function allCaptured(types) { return types.every(([type]) => !!QC.imageUrls[type]); }
-
-document.getElementById("boxImagesNextBtn").addEventListener("click", function () {
-  if (!allCaptured(BOX_IMAGE_TYPES)) { toast("Capture all 6 box photos first.", "error"); return; }
-  document.getElementById("qcStepProduct").classList.remove("hidden");
-});
 
 // ---------- Step: product condition ----------
 document.getElementById("productGoodBtn").addEventListener("click", function () { setProductCondition(true); });
@@ -333,6 +306,10 @@ document.getElementById("submitQCBtn").addEventListener("click", async function 
   let receivedQty = expectedQty;
   let missingQty = 0;
 
+  // No separate box-condition step anymore — box damage is derived from
+  // whether the operator checked "Box damage" among the reason checkboxes.
+  QC.isBoxDamaged = QC.damageReasonCodes.includes("BOX_DAMAGE");
+
   if (QC.isProductGood === false) {
     damageDetails = { product_damage: 0, wrong_product: 0, shortage: 0, parts_missing: 0, used_product: 0, box_damage: 0, good: 0 };
     if (expectedQty > 1) {
@@ -416,7 +393,7 @@ function resetQCState() {
 
   document.getElementById("skuBox").classList.add("hidden");
   document.getElementById("labelThumb").innerHTML = "";
-  ["qcStepLabel","qcStepBox","qcStepBoxImages","qcStepProduct","qcStepReasons","qcStepProductImages","qcStepQty"]
+  ["qcStepLabel","qcStepProduct","qcStepReasons","qcStepProductImages","qcStepQty"]
     .forEach(id => document.getElementById(id).classList.add("hidden"));
   document.getElementById("submitQCBtn").classList.add("hidden");
   document.getElementById("startCameraBtn").classList.remove("hidden");
