@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOUNCE - Returns Management Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="login-page" id="loginPage">
+  <div class="login-card">
+    <div class="login-title">B<span>O</span>UNCE</div>
+    <div class="login-subtitle">Returns Management Portal</div>
+    <div class="login-company">
+      <div class="login-company-name">Losung360</div>
+      <div class="login-tagline">Simplifying Operations. Amplifying Growth.</div>
+    </div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label class="form-label" for="loginUsername">Username</label>
+        <input type="text" class="form-input" id="loginUsername" autocomplete="username" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="loginPassword">Password</label>
+        <input type="password" class="form-input" id="loginPassword" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" id="loginBtn">Sign in</button>
+      <div class="status-msg" id="loginStatus"></div>
+    </form>
+  </div>
+</div>
+
+<div class="app-container hidden" id="appContainer">
+  <div class="sidebar">
+    <div class="sidebar-logo">B<span>O</span>UNCE</div>
+    <div class="nav-item active">Receive</div>
+    <div class="nav-item">QC</div>
+    <div class="nav-item">CBP</div>
+    <div class="nav-item">Reports</div>
+    <div class="nav-item">Claims</div>
+  </div>
+  <div class="main-content">
+    <p id="welcomeMsg" style="font-size:15px;"></p>
+    <p style="color:var(--text-secondary); font-size:13px; margin-top:8px;">
+      Logged in and talking to the real backend. Next screens land here once this step's confirmed.
+    </p>
+    <button class="btn btn-secondary" style="margin-top:20px;" id="logoutBtn">Log out</button>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
