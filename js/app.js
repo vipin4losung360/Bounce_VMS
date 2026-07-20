@@ -4,11 +4,13 @@
 // ============================================================================
 
 function showLogin() {
+  document.getElementById("loadingPage").classList.add("hidden");
   document.getElementById("appContainer").classList.add("hidden");
   document.getElementById("loginPage").classList.remove("hidden");
 }
 
 function showApp(user) {
+  document.getElementById("loadingPage").classList.add("hidden");
   document.getElementById("loginPage").classList.add("hidden");
   document.getElementById("appContainer").classList.remove("hidden");
   document.getElementById("welcomeMsg").textContent =
