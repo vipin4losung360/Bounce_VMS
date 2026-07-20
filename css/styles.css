@@ -206,27 +206,46 @@ html, body {
 }
 
 .sidebar {
-  width: 170px;
+  width: 60px;
   background: var(--bg-sidebar);
   border-right: 1px solid var(--border);
   padding: 20px 0;
   flex-shrink: 0;
+  overflow: hidden;
+  transition: width 0.18s ease;
 }
+.sidebar:hover { width: 180px; }
 
 .sidebar-logo {
-  padding: 0 20px 20px;
+  padding: 0 0 20px;
   font-weight: 500;
   font-size: 16px;
+  white-space: nowrap;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .sidebar-logo span { color: var(--orange); }
+.logo-full { display: none; padding-left: 4px; }
+.logo-icon { font-size: 18px; }
+.sidebar:hover .logo-full { display: inline; }
+.sidebar:hover .logo-icon { display: none; }
 
 .nav-item {
-  padding: 10px 20px;
+  padding: 11px 20px;
   font-size: 13px;
   color: var(--text-secondary);
   cursor: pointer;
   border-right: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
 }
+.nav-item i { font-size: 18px; flex-shrink: 0; width: 18px; text-align: center; }
+.nav-label { opacity: 0; transition: opacity 0.12s; }
+.sidebar:hover .nav-label { opacity: 1; }
 .nav-item:hover { color: var(--text-primary); }
 .nav-item.active {
   color: var(--orange-tint-text);
@@ -380,6 +399,29 @@ select.form-input:disabled { background-color: var(--bg-page); color: var(--text
 .toast.info { background: var(--text-primary); color: #ffffff; }
 
 /* ---------- QC screen ---------- */
+.qc-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 0 16px 16px;
+}
+
+.qc-video-pane {
+  flex: 1.15;
+  position: sticky;
+  top: 16px;
+}
+
+.qc-right-pane {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 1100px) {
+  .qc-layout { flex-direction: column; }
+  .qc-video-pane { position: static; width: 100%; }
+}
+
 .sku-box {
   background: var(--bg-page);
   border-radius: var(--radius);
