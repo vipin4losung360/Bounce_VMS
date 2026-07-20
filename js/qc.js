@@ -39,6 +39,47 @@ const REASON_NAMES = {
   PARTS_MISSING: "Parts missing", USED_PRODUCT: "Used product", BOX_DAMAGE: "Box damage"
 };
 
+// ---------- Accordion control ----------
+const STEP_ORDER = ["label", "product", "reasons", "photos", "qty"];
+
+function unlockStep(name) {
+  document.getElementById("stepItem-" + name).classList.remove("hidden");
+}
+
+function openStep(name) {
+  STEP_ORDER.forEach(function (s) {
+    const body = document.getElementById("body-" + s);
+    const item = document.getElementById("stepItem-" + s);
+    const active = s === name;
+    body.classList.toggle("collapsed", !active);
+    item.classList.toggle("active", active);
+  });
+}
+
+function toggleStep(name) {
+  const item = document.getElementById("stepItem-" + name);
+  if (item.classList.contains("hidden")) return; // not unlocked yet, ignore
+  const body = document.getElementById("body-" + name);
+  if (body.classList.contains("collapsed")) {
+    openStep(name);
+  } else {
+    body.classList.add("collapsed");
+    item.classList.remove("active");
+  }
+}
+
+function markDone(name, summaryText) {
+  document.getElementById("stepItem-" + name).classList.add("done");
+  document.getElementById("check-" + name).innerHTML = '<i class="ti ti-circle-check-filled"></i>';
+  document.getElementById("summary-" + name).textContent = summaryText;
+}
+
+function markPending(name) {
+  document.getElementById("stepItem-" + name).classList.remove("done");
+  document.getElementById("check-" + name).innerHTML = '<i class="ti ti-circle-dashed"></i>';
+  document.getElementById("summary-" + name).textContent = "";
+}
+
 // ---------- Load item ----------
 document.getElementById("qcLoadBtn").addEventListener("click", loadItemForQC);
 document.getElementById("qcScanInput").addEventListener("keydown", function (e) {
@@ -115,7 +156,8 @@ document.getElementById("startCameraBtn").addEventListener("click", async functi
   QC.mediaRecorder.start();
   QC.startedAt = Date.now();
 
-  document.getElementById("qcStepLabel").classList.remove("hidden");
+  unlockStep("label");
+  openStep("label");
 });
 
 function stopRecordingAndGetBlob() {
@@ -171,10 +213,21 @@ document.getElementById("captureLabelBtn").addEventListener("click", async funct
   const ok = await uploadSnapshot("LABEL", base64);
   btn.disabled = false;
   if (ok) {
-    document.getElementById("labelThumb").innerHTML = `<img src="${base64}">`;
-    document.getElementById("qcStepProduct").classList.remove("hidden");
+    document.getElementById("labelThumb").innerHTML =
+      `<div class="snap-thumb"><img src="${base64}"><button class="snap-remove" onclick="removeLabel()"><i class="ti ti-x"></i></button></div>`;
+    markDone("label", "Captured");
+    unlockStep("product");
+    openStep("product");
   }
 });
+
+function removeLabel() {
+  delete QC.imageUrls.LABEL;
+  delete QC.images.LABEL;
+  document.getElementById("labelThumb").innerHTML = "";
+  markPending("label");
+  openStep("label");
+}
 
 function renderSnapshotGrid(gridId, types) {
   const grid = document.getElementById(gridId);
@@ -183,15 +236,35 @@ function renderSnapshotGrid(gridId, types) {
   ).join("");
 }
 
+function renderSlotEmpty(type, label) {
+  const slot = document.getElementById("slot-" + type);
+  slot.innerHTML = label;
+  slot.classList.remove("captured");
+}
+
 async function captureGridSnapshot(type, gridId) {
   const base64 = takeSnapshot();
   const ok = await uploadSnapshot(type, base64);
   if (ok) {
-    document.getElementById("slot-" + type).innerHTML = `<img src="${base64}">`;
+    document.getElementById("slot-" + type).innerHTML =
+      `<img src="${base64}"><button class="snap-remove" onclick="event.stopPropagation(); removeGridSnapshot('${type}', '${gridId}')"><i class="ti ti-x"></i></button>`;
     document.getElementById("slot-" + type).classList.add("captured");
   }
   if (gridId === "productImagesGrid" && allCaptured(PRODUCT_IMAGE_TYPES)) {
+    markDone("photos", "6/6 captured");
     afterProductImages();
+  }
+}
+
+function removeGridSnapshot(type, gridId) {
+  delete QC.imageUrls[type];
+  delete QC.images[type];
+  const types = gridId === "productImagesGrid" ? PRODUCT_IMAGE_TYPES : [];
+  const match = types.find(t => t[0] === type);
+  renderSlotEmpty(type, match ? match[1] : "");
+  if (gridId === "productImagesGrid") {
+    markPending("photos");
+    openStep("photos");
   }
 }
 
@@ -207,12 +280,13 @@ function setProductCondition(isGood) {
   document.getElementById("productBadBtn").classList.toggle("selected-danger", isGood === false);
 
   if (isGood) {
-    document.getElementById("qcStepReasons").classList.add("hidden");
-    document.getElementById("qcStepProductImages").classList.add("hidden");
+    markDone("product", "Good");
     finishSteps();
   } else {
+    markDone("product", "Damaged");
     renderDamageReasons();
-    document.getElementById("qcStepReasons").classList.remove("hidden");
+    unlockStep("reasons");
+    openStep("reasons");
   }
 }
 
@@ -234,14 +308,17 @@ function toggleReason(el) {
 
 document.getElementById("reasonsNextBtn").addEventListener("click", function () {
   if (QC.damageReasonCodes.length === 0) { toast("Select at least one reason.", "error"); return; }
+  markDone("reasons", QC.damageReasonCodes.length + " reason" + (QC.damageReasonCodes.length > 1 ? "s" : "") + " selected");
   renderSnapshotGrid("productImagesGrid", PRODUCT_IMAGE_TYPES);
-  document.getElementById("qcStepProductImages").classList.remove("hidden");
+  unlockStep("photos");
+  openStep("photos");
 });
 
 function afterProductImages() {
   if (QC.expectedQty > 1) {
     renderQtyBreakdown();
-    document.getElementById("qcStepQty").classList.remove("hidden");
+    unlockStep("qty");
+    openStep("qty");
   }
   finishSteps();
 }
@@ -402,8 +479,14 @@ function resetQCState() {
 
   document.getElementById("skuBox").classList.add("hidden");
   document.getElementById("labelThumb").innerHTML = "";
-  ["qcStepLabel","qcStepProduct","qcStepReasons","qcStepProductImages","qcStepQty"]
-    .forEach(id => document.getElementById(id).classList.add("hidden"));
+  STEP_ORDER.forEach(function (s) {
+    const item = document.getElementById("stepItem-" + s);
+    item.classList.add("hidden");
+    item.classList.remove("done", "active");
+    document.getElementById("body-" + s).classList.add("collapsed");
+    document.getElementById("check-" + s).innerHTML = '<i class="ti ti-circle-dashed"></i>';
+    document.getElementById("summary-" + s).textContent = "";
+  });
   document.getElementById("submitQCBtn").classList.add("hidden");
   document.getElementById("startCameraBtn").classList.remove("hidden");
   document.querySelectorAll(".qc-toggle-btn").forEach(b => b.classList.remove("selected-danger","selected-success"));
