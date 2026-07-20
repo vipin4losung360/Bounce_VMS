@@ -377,7 +377,16 @@ function calculateTag() {
 function blobToBase64(blob) {
   return new Promise(function (resolve, reject) {
     const reader = new FileReader();
-    reader.onload = function () { resolve(reader.result); };
+    reader.onload = function () {
+      // MediaRecorder often reports a mimeType like
+      // "video/webm;codecs=vp9,opus" — the backend's stripping regex only
+      // matches a plain "data:video/webm;base64," prefix, so normalize it
+      // here rather than touching Code.gs. Codec info isn't needed for
+      // storage; the container (webm) is all that matters downstream.
+      const commaIndex = reader.result.indexOf(",");
+      const rawBase64 = reader.result.slice(commaIndex + 1);
+      resolve("data:video/webm;base64," + rawBase64);
+    };
     reader.onerror = reject;
     reader.readAsDataURL(blob);
   });
