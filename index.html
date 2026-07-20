@@ -9,7 +9,15 @@
 </head>
 <body>
 
-<div class="login-page" id="loginPage">
+<div class="loading-page" id="loadingPage">
+  <div class="loading-spinner"></div>
+</div>
+
+<div class="login-page hidden" id="loginPage">
+  <div class="login-visual">
+    <img src="assets/workflow-diagram.png" alt="BOUNCE workflow: Receive, Sync, QC, Evidence Vault, Claims Center, Reports">
+  </div>
+  <div class="login-panel">
   <div class="login-card">
     <div class="login-title">B<span>O</span>UNCE</div>
     <div class="login-subtitle">Returns Management Portal</div>
@@ -29,6 +37,7 @@
       <button type="submit" class="btn btn-primary btn-full" id="loginBtn">Sign in</button>
       <div class="status-msg" id="loginStatus"></div>
     </form>
+  </div>
   </div>
 </div>
 
