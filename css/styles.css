@@ -58,32 +58,31 @@ html, body {
 .login-page {
   min-height: 100vh;
   display: flex;
+  background: #fdf9f6;
 }
 
 .login-visual {
-  flex: 1.45;
+  flex: 1.6;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
-  background: var(--bg-page);
+  padding: 20px 0 20px 20px;
 }
 
 .login-visual img {
-  max-width: 100%;
-  max-height: 92vh;
+  width: 100%;
+  max-height: 96vh;
   object-fit: contain;
 }
 
 .login-panel {
   flex: 1;
-  min-width: 440px;
-  max-width: 480px;
+  min-width: 420px;
+  max-width: 460px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  background: linear-gradient(160deg, var(--amber-tint), var(--orange-tint));
 }
 
 @media (max-width: 900px) {
@@ -92,15 +91,13 @@ html, body {
 }
 
 .login-card {
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  background: #ffffff;
   border-radius: var(--radius-card);
-  border: 1px solid rgba(255,255,255,0.7);
+  border: 1px solid var(--border);
   width: 100%;
   max-width: 340px;
   padding: 32px 28px;
-  box-shadow: 0 8px 32px rgba(43,38,32,0.1);
+  box-shadow: 0 12px 40px rgba(43,38,32,0.08);
 }
 
 .login-title {
