@@ -1,0 +1,186 @@
+:root {
+  --bg-page: #fafafa;
+  --bg-card: #ffffff;
+  --bg-sidebar: #ffffff;
+  --border: #ececec;
+  --border-strong: #e0e0e0;
+  --text-primary: #1a1a1a;
+  --text-secondary: #8a8a8a;
+  --text-muted: #b0b0b0;
+  --orange: #ff8c1a;
+  --orange-hover: #e6790f;
+  --orange-tint: #fff3e6;
+  --orange-tint-text: #c2660d;
+  --danger: #c62828;
+  --danger-tint: #ffebee;
+  --success: #2e7d32;
+  --success-tint: #e8f5e9;
+  --radius: 10px;
+  --radius-card: 14px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: var(--font);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.hidden { display: none !important; }
+
+/* ---------- Login ---------- */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  width: 100%;
+  max-width: 340px;
+  padding: 32px 28px;
+}
+
+.login-title {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.login-title span { color: var(--orange); }
+
+.login-subtitle {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.login-company {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.login-company-name { font-size: 12px; font-weight: 500; color: var(--text-primary); }
+.login-tagline { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+.form-group { margin-top: 18px; }
+
+.form-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 11px 12px;
+  font-size: 14px;
+  font-family: var(--font);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: #ffffff;
+  color: var(--text-primary);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px var(--orange-tint);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font);
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s, opacity 0.15s;
+  min-height: 42px;
+}
+
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-primary { background: var(--orange); color: #ffffff; }
+.btn-primary:hover:not(:disabled) { background: var(--orange-hover); }
+
+.btn-secondary {
+  background: #ffffff;
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+.btn-secondary:hover:not(:disabled) { border-color: var(--orange); }
+
+.btn-full { width: 100%; margin-top: 20px; }
+
+.status-msg {
+  font-size: 12px;
+  margin-top: 12px;
+  text-align: center;
+  min-height: 16px;
+}
+.status-msg.error { color: var(--danger); }
+.status-msg.pending { color: var(--text-secondary); }
+
+/* ---------- App shell (used from the next screen onward) ---------- */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 170px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  flex-shrink: 0;
+}
+
+.sidebar-logo {
+  padding: 0 20px 20px;
+  font-weight: 500;
+  font-size: 16px;
+}
+.sidebar-logo span { color: var(--orange); }
+
+.nav-item {
+  padding: 10px 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-right: 2px solid transparent;
+}
+.nav-item:hover { color: var(--text-primary); }
+.nav-item.active {
+  color: var(--orange-tint-text);
+  background: var(--orange-tint);
+  border-right-color: var(--orange);
+  font-weight: 500;
+}
+
+.main-content { flex: 1; padding: 24px 28px; }
