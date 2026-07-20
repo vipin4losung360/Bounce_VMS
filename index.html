@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BOUNCE - Returns Management Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -60,25 +61,132 @@
   </div>
 </div>
 
+<div class="toast-container" id="toastContainer"></div>
+
 <div class="app-container hidden" id="appContainer">
   <div class="sidebar">
     <div class="sidebar-logo">B<span>O</span>UNCE</div>
-    <div class="nav-item active">Receive</div>
-    <div class="nav-item">QC</div>
-    <div class="nav-item">CBP</div>
-    <div class="nav-item">Reports</div>
-    <div class="nav-item">Claims</div>
+    <div class="nav-item active" data-page="receive">Receive</div>
+    <div class="nav-item" data-page="qc">QC</div>
+    <div class="nav-item" data-page="cbp">CBP</div>
+    <div class="nav-item" data-page="reports">Reports</div>
+    <div class="nav-item" data-page="claims">Claims</div>
   </div>
   <div class="main-content">
-    <p id="welcomeMsg" style="font-size:15px;"></p>
-    <p style="color:var(--text-secondary); font-size:13px; margin-top:8px;">
-      Logged in and talking to the real backend. Next screens land here once this step's confirmed.
-    </p>
-    <button class="btn btn-secondary" style="margin-top:20px;" id="logoutBtn">Log out</button>
+
+    <div class="topbar">
+      <span id="welcomeMsg" style="font-size:13px; color:var(--text-secondary);"></span>
+      <button class="btn btn-secondary" id="logoutBtn" style="min-height:32px; padding:6px 14px;">Log out</button>
+    </div>
+
+    <div class="page active" id="page-receive">
+      <div class="card" id="newShipmentCard">
+        <div class="card-header">New shipment</div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">FC</label>
+              <select class="form-input" id="receiveFC"><option value="">Select</option></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Client</label>
+              <select class="form-input" id="receiveClient" disabled><option value="">Select</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Marketplace</label>
+              <select class="form-input" id="receiveMarketplace" disabled><option value="">Select</option></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Partner</label>
+              <select class="form-input" id="receivePartner"><option value="">Select</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Claimed count</label>
+              <input type="number" class="form-input" id="receiveClaimed" min="1">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Vehicle no.</label>
+              <input type="text" class="form-input" id="receiveVehicle">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Actual received date</label>
+              <input type="date" class="form-input" id="receiveActualDate">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Actual received time</label>
+              <input type="time" class="form-input" id="receiveActualTime">
+            </div>
+          </div>
+          <button class="btn btn-primary btn-full" id="createShipmentBtn">Create and scan</button>
+        </div>
+      </div>
+
+      <div class="card" id="activeShipmentsCard">
+        <div class="card-header">
+          <span>Active shipments</span>
+          <button class="btn btn-secondary" id="refreshShipmentsBtn" style="min-height:30px; padding:6px 12px;">Refresh</button>
+        </div>
+        <div class="card-body">
+          <div class="shipment-list" id="activeShipmentsList">
+            <div class="empty-state">No active shipments</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card hidden" id="scanningCard">
+        <div class="card-header">
+          <span id="currentDocId">-</span>
+          <button class="btn btn-secondary" id="closeScanningBtn" style="min-height:30px; padding:6px 12px;">Close</button>
+        </div>
+        <div class="card-body">
+          <div class="counter-grid">
+            <div class="counter-box highlight"><div class="counter-value" id="counterScanned">0</div><div class="counter-label">Scanned</div></div>
+            <div class="counter-box"><div class="counter-value" id="counterClaimed">0</div><div class="counter-label">Claimed</div></div>
+            <div class="counter-box"><div class="counter-value" id="counterPending">0</div><div class="counter-label">Pending</div></div>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="scanProgress" style="width:0%"></div></div>
+          <div class="form-group">
+            <label class="form-label">Scan tracking ID</label>
+            <div style="display:flex; gap:8px;">
+              <input type="text" class="form-input" id="scanInput" style="text-transform:uppercase;">
+              <button class="btn btn-primary" id="scanAddBtn" style="min-width:80px;">Add</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Scanned (<span id="itemCount">0</span>)</label>
+            <div class="items-list" id="scannedList"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Upload POD (PDF only)</label>
+            <input type="file" accept="application/pdf" class="form-input" id="podFileInput">
+            <div class="status-msg" id="podStatus"></div>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:12px;">
+            <button class="btn btn-secondary" style="flex:1;" id="saveCloseScanBtn">Save and close</button>
+            <button class="btn btn-primary" style="flex:1;" id="completeShipmentBtn">Complete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-qc"><div class="empty-state">QC screen — next step</div></div>
+    <div class="page" id="page-cbp"><div class="empty-state">CBP screen — not built yet</div></div>
+    <div class="page" id="page-reports"><div class="empty-state">Reports screen — not built yet</div></div>
+    <div class="page" id="page-claims"><div class="empty-state">Claims screen — not built yet</div></div>
+
   </div>
 </div>
 
 <script src="js/api.js"></script>
+<script src="js/toast.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/receive.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
