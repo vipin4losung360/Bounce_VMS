@@ -229,43 +229,57 @@ function removeLabel() {
   openStep("label");
 }
 
-function renderSnapshotGrid(gridId, types) {
-  const grid = document.getElementById(gridId);
-  grid.innerHTML = types.map(([type, label]) =>
-    `<div class="snapshot-slot" id="slot-${type}" onclick="captureGridSnapshot('${type}', '${gridId}')">${label}</div>`
+function renderSnapshotStrip(types) {
+  const strip = document.getElementById("productImagesStrip");
+  strip.innerHTML = types.map(([type, label]) =>
+    `<div class="snap-thumb" id="pstrip-${type}"><div class="snap-placeholder">${label}</div></div>`
   ).join("");
+  updateCaptureBtnLabel();
 }
 
-function renderSlotEmpty(type, label) {
-  const slot = document.getElementById("slot-" + type);
-  slot.innerHTML = label;
-  slot.classList.remove("captured");
+function nextUncapturedType(types) {
+  return types.find(([type]) => !QC.imageUrls[type]);
 }
 
-async function captureGridSnapshot(type, gridId) {
+function updateCaptureBtnLabel() {
+  const count = PRODUCT_IMAGE_TYPES.filter(([type]) => !!QC.imageUrls[type]).length;
+  const btn = document.getElementById("capturePhotoBtn");
+  const next = nextUncapturedType(PRODUCT_IMAGE_TYPES);
+  btn.textContent = count >= 6 ? "All 6 photos captured" : `Capture photo (${count}/6)${next ? " — " + next[1] : ""}`;
+  btn.disabled = count >= 6;
+}
+
+document.getElementById("capturePhotoBtn").addEventListener("click", async function () {
+  const next = nextUncapturedType(PRODUCT_IMAGE_TYPES);
+  if (!next) return;
+  const [type] = next;
   const base64 = takeSnapshot();
+  const btn = this;
+  btn.disabled = true;
+
   const ok = await uploadSnapshot(type, base64);
   if (ok) {
-    document.getElementById("slot-" + type).innerHTML =
-      `<img src="${base64}"><button class="snap-remove" onclick="event.stopPropagation(); removeGridSnapshot('${type}', '${gridId}')"><i class="ti ti-x"></i></button>`;
-    document.getElementById("slot-" + type).classList.add("captured");
+    document.getElementById("pstrip-" + type).innerHTML =
+      `<img src="${base64}"><button class="snap-remove" onclick="removeStripSnapshot('${type}')"><i class="ti ti-x"></i></button>`;
   }
-  if (gridId === "productImagesGrid" && allCaptured(PRODUCT_IMAGE_TYPES)) {
+  updateCaptureBtnLabel();
+
+  if (allCaptured(PRODUCT_IMAGE_TYPES)) {
     markDone("photos", "6/6 captured");
     afterProductImages();
+  } else {
+    btn.disabled = false;
   }
-}
+});
 
-function removeGridSnapshot(type, gridId) {
+function removeStripSnapshot(type) {
   delete QC.imageUrls[type];
   delete QC.images[type];
-  const types = gridId === "productImagesGrid" ? PRODUCT_IMAGE_TYPES : [];
-  const match = types.find(t => t[0] === type);
-  renderSlotEmpty(type, match ? match[1] : "");
-  if (gridId === "productImagesGrid") {
-    markPending("photos");
-    openStep("photos");
-  }
+  const match = PRODUCT_IMAGE_TYPES.find(t => t[0] === type);
+  document.getElementById("pstrip-" + type).innerHTML = `<div class="snap-placeholder">${match ? match[1] : ""}</div>`;
+  markPending("photos");
+  openStep("photos");
+  updateCaptureBtnLabel();
 }
 
 function allCaptured(types) { return types.every(([type]) => !!QC.imageUrls[type]); }
@@ -309,7 +323,7 @@ function toggleReason(el) {
 document.getElementById("reasonsNextBtn").addEventListener("click", function () {
   if (QC.damageReasonCodes.length === 0) { toast("Select at least one reason.", "error"); return; }
   markDone("reasons", QC.damageReasonCodes.length + " reason" + (QC.damageReasonCodes.length > 1 ? "s" : "") + " selected");
-  renderSnapshotGrid("productImagesGrid", PRODUCT_IMAGE_TYPES);
+  renderSnapshotStrip(PRODUCT_IMAGE_TYPES);
   unlockStep("photos");
   openStep("photos");
 });
