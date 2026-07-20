@@ -52,6 +52,44 @@ document.getElementById("logoutBtn").addEventListener("click", async function ()
   showLogin();
 });
 
+// ---------- Forgot password ----------
+function setForgotStatus(msg, type) {
+  const el = document.getElementById("forgotStatus");
+  el.textContent = msg;
+  el.className = "status-msg " + (type || "");
+}
+
+document.getElementById("forgotPasswordLink").addEventListener("click", function (e) {
+  e.preventDefault();
+  document.getElementById("forgotUsername").value = "";
+  setForgotStatus("", "");
+  document.getElementById("forgotPasswordModal").classList.remove("hidden");
+});
+
+document.getElementById("forgotCancelBtn").addEventListener("click", function () {
+  document.getElementById("forgotPasswordModal").classList.add("hidden");
+});
+
+document.getElementById("forgotSendBtn").addEventListener("click", async function () {
+  const username = document.getElementById("forgotUsername").value.trim();
+  if (!username) { setForgotStatus("Enter your username.", "error"); return; }
+
+  const btn = document.getElementById("forgotSendBtn");
+  btn.disabled = true;
+  setForgotStatus("Sending…", "pending");
+
+  const r = await apiPublic("forgotPassword", { username: username });
+
+  btn.disabled = false;
+
+  if (r.success) {
+    setForgotStatus(r.message || "Reset email sent.", "");
+    setTimeout(() => document.getElementById("forgotPasswordModal").classList.add("hidden"), 2000);
+  } else {
+    setForgotStatus(r.error || "Couldn't send reset email.", "error");
+  }
+});
+
 // On load: if there's a saved session, verify it's still valid before
 // trusting it (same behavior as the original Portal's checkSession()).
 (async function init() {
