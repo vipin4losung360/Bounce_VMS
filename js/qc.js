@@ -14,6 +14,9 @@ const QC = {
   clientCode: null,
   damageReasons: [],
   stream: null,
+  canvasStream: null,
+  canvasCtx: null,
+  drawLoopId: null,
   mediaRecorder: null,
   chunks: [],
   recordedBlob: null,
@@ -149,18 +152,52 @@ document.getElementById("startCameraBtn").addEventListener("click", async functi
     return;
   }
 
-  document.getElementById("qcVideo").srcObject = QC.stream;
+  const rawVideo = document.getElementById("qcRawVideo");
+  rawVideo.srcObject = QC.stream;
+
+  const track = QC.stream.getVideoTracks()[0];
+  const settings = track ? track.getSettings() : {};
+  const width = settings.width || 1280;
+  const height = settings.height || 720;
+
+  if (settings.width && settings.height) {
+    const is1080 = settings.width >= 1920 || settings.height >= 1080;
+    toast(
+      "Camera recording at " + settings.width + "×" + settings.height +
+      (is1080 ? "" : " — this device doesn't support 1080p, this is its max."),
+      is1080 ? "success" : "error"
+    );
+  }
+
+  const canvas = document.getElementById("qcCanvas");
+  canvas.width = width;
+  canvas.height = height;
+  QC.canvasCtx = canvas.getContext("2d");
+
+  // Draw the live camera frame plus a burned-in timestamp onto the canvas,
+  // continuously, for as long as the QC session runs. This canvas — not
+  // the raw camera stream — is what actually gets recorded and snapshotted,
+  // so the timestamp is baked into every frame and every photo.
+  function drawFrame() {
+    if (!QC.stream) return; // stopped
+    QC.canvasCtx.drawImage(rawVideo, 0, 0, width, height);
+    drawTimestampOverlay(QC.canvasCtx, width, height);
+    QC.drawLoopId = requestAnimationFrame(drawFrame);
+  }
+  drawFrame();
+
   document.getElementById("startCameraBtn").classList.add("hidden");
   document.getElementById("recBadge").classList.remove("hidden");
 
   QC.chunks = [];
+  QC.canvasStream = canvas.captureStream(30);
   // Prefer VP9 where supported — meaningfully better compression at the
   // same 1080p resolution, no quality trade-off. Falls back to whatever
   // the browser defaults to (usually VP8) if VP9 isn't available.
   const recorderOptions = MediaRecorder.isTypeSupported("video/webm;codecs=vp9")
     ? { mimeType: "video/webm;codecs=vp9" }
     : {};
-  QC.mediaRecorder = new MediaRecorder(QC.stream, recorderOptions);
+  QC.mediaRecorder = new MediaRecorder(QC.canvasStream, recorderOptions);
   QC.mediaRecorder.ondataavailable = function (e) { if (e.data.size > 0) QC.chunks.push(e.data); };
   QC.mediaRecorder.start();
   QC.startedAt = Date.now();
@@ -168,6 +205,29 @@ document.getElementById("startCameraBtn").addEventListener("click", async functi
   unlockStep("label");
   openStep("label");
 });
+
+function drawTimestampOverlay(ctx, w, h) {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+  const timeStr = now.toLocaleTimeString("en-GB", { hour12: false });
+  const trackingPart = QC.item ? (QC.item.tracking_id + "  |  ") : "";
+  const label = trackingPart + dateStr + "  " + timeStr;
+
+  const fontSize = Math.max(16, Math.round(h * 0.026));
+  ctx.font = fontSize + "px monospace";
+  const textWidth = ctx.measureText(label).width;
+  const pad = fontSize * 0.6;
+  const boxHeight = fontSize + pad * 1.4;
+  const boxWidth = textWidth + pad * 2;
+  const x = pad;
+  const y = h - boxHeight - pad;
+
+  ctx.fillStyle = "rgba(0,0,0,0.55)";
+  ctx.fillRect(x, y, boxWidth, boxHeight);
+  ctx.fillStyle = "#ffffff";
+  ctx.textBaseline = "middle";
+  ctx.fillText(label, x + pad, y + boxHeight / 2);
+}
 
 function stopRecordingAndGetBlob() {
   return new Promise(function (resolve) {
@@ -181,19 +241,17 @@ function stopRecordingAndGetBlob() {
 }
 
 function stopCameraHard() {
+  if (QC.drawLoopId) { cancelAnimationFrame(QC.drawLoopId); QC.drawLoopId = null; }
+  if (QC.canvasStream) { QC.canvasStream.getTracks().forEach(t => t.stop()); QC.canvasStream = null; }
   if (QC.stream) { QC.stream.getTracks().forEach(t => t.stop()); QC.stream = null; }
-  document.getElementById("qcVideo").srcObject = null;
+  document.getElementById("qcRawVideo").srcObject = null;
   document.getElementById("recBadge").classList.add("hidden");
 }
 
 // ---------- Snapshot capture ----------
 function takeSnapshot() {
-  const video = document.getElementById("qcVideo");
-  const canvas = document.createElement("canvas");
-  canvas.width = video.videoWidth || 640;
-  canvas.height = video.videoHeight || 480;
-  canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-  return canvas.toDataURL("image/jpeg", 0.85);
+  const canvas = document.getElementById("qcCanvas");
+  return canvas.toDataURL("image/jpeg", 0.92);
 }
 
 async function uploadSnapshot(type, base64) {
@@ -487,7 +545,8 @@ function blobToBase64(blob) {
 
 function resetQCState() {
   QC.item = null; QC.marketplace = null; QC.fcCode = null; QC.clientCode = null;
-  QC.damageReasons = []; QC.stream = null; QC.mediaRecorder = null; QC.chunks = [];
+  QC.damageReasons = []; QC.stream = null; QC.canvasStream = null; QC.canvasCtx = null;
+  QC.drawLoopId = null; QC.mediaRecorder = null; QC.chunks = [];
   QC.recordedBlob = null; QC.startedAt = null; QC.images = {}; QC.imageUrls = {};
   QC.isBoxDamaged = null; QC.isProductGood = null; QC.damageReasonCodes = [];
   QC.skuDetails = null; QC.saleOrderCode = null; QC.returnType = null;
