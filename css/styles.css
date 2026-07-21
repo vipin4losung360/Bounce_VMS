@@ -461,7 +461,7 @@ select.form-input:disabled { background-color: var(--bg-page); color: var(--text
   background: #1a1a1a;
   min-height: 260px;
 }
-.video-wrap video { width: 100%; display: block; min-height: 260px; object-fit: cover; background: #1a1a1a; }
+.video-wrap video, .video-wrap canvas { width: 100%; display: block; min-height: 260px; object-fit: cover; background: #1a1a1a; }
 
 .rec-badge {
   position: absolute;
