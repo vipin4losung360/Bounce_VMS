@@ -204,7 +204,8 @@
         <div class="qc-layout">
           <div class="qc-video-pane">
             <div class="video-wrap" id="videoWrap">
-              <video id="qcVideo" autoplay muted playsinline></video>
+              <video id="qcRawVideo" autoplay muted playsinline style="display:none;"></video>
+              <canvas id="qcCanvas"></canvas>
               <div class="rec-badge hidden" id="recBadge"><span class="rec-dot"></span>recording</div>
             </div>
             <button class="btn btn-primary btn-full" id="startCameraBtn" style="margin-top:10px;">Start camera and begin QC</button>
