@@ -26,5 +26,6 @@ document.querySelectorAll(".nav-item").forEach(function (item) {
 
     if (target === "receive") loadActiveShipments();
     if (target === "users") loadUsers();
+    if (target === "cbp") loadCBPPage();
   });
 });
