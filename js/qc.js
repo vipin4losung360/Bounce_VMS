@@ -510,10 +510,21 @@ document.getElementById("submitQCBtn").addEventListener("click", async function 
 
   // Video is the slow part — queue it in the background and free the
   // operator to scan the next item immediately. Track it on the Uploads tab.
-  if (blob && blob.size > 0) {
-    queueVideoUpload(trackingId, itemId, blob, trackingId + "_VIDEO.webm");
-  } else {
-    toast("No video was captured for this QC — nothing to upload. Check the recording next time.", "error");
+  // Wrapped in try/catch deliberately: if anything here throws unexpectedly
+  // (e.g. a missing script), we must not silently lose an already-recorded
+  // video or leave the form stuck mid-submit.
+  try {
+    if (blob && blob.size > 0) {
+      if (typeof queueVideoUpload !== "function") {
+        throw new Error("Upload queue isn't loaded (js/uploadQueue.js missing or failed to load).");
+      }
+      queueVideoUpload(trackingId, itemId, blob, trackingId + "_VIDEO.webm");
+    } else {
+      toast("No video was captured for this QC — nothing to upload. Check the recording next time.", "error");
+    }
+  } catch (queueErr) {
+    console.error("Video queuing failed:", queueErr);
+    toast("Video couldn't be queued for upload: " + queueErr.message, "error");
   }
 
   resetQCState();
