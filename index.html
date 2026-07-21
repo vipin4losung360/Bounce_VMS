@@ -147,7 +147,7 @@
     <div class="nav-item" data-page="qc"><i class="ti ti-checkbox"></i><span class="nav-label">QC</span></div>
     <div class="nav-item" data-page="cbp"><i class="ti ti-ban"></i><span class="nav-label">CBP</span></div>
     <div class="nav-item" data-page="reports"><i class="ti ti-chart-bar"></i><span class="nav-label">Reports</span></div>
-    <div class="nav-item" data-page="claims"><i class="ti ti-file-text"></i><span class="nav-label">Claims</span></div>
+    <div class="nav-item hidden" data-page="claims"><i class="ti ti-file-text"></i><span class="nav-label">Claims</span></div>
     <div class="nav-item" data-page="uploads"><i class="ti ti-cloud-upload"></i><span class="nav-label">Uploads</span><span class="nav-badge hidden" id="uploadsBadge"></span></div>
     <div class="nav-item hidden" data-page="users"><i class="ti ti-users"></i><span class="nav-label">Users</span></div>
   </div>
@@ -415,7 +415,72 @@
       </div>
     </div>
     <div class="page" id="page-reports"><div class="empty-state">Reports screen — not built yet</div></div>
-    <div class="page" id="page-claims"><div class="empty-state">Claims screen — not built yet</div></div>
+    <div class="page" id="page-claims">
+      <div class="card">
+        <div class="card-header">Claims summary</div>
+        <div class="card-body">
+          <div class="counter-grid" style="grid-template-columns:repeat(4,1fr);">
+            <div class="counter-box"><div class="counter-value" id="claimsPendingCount">0</div><div class="counter-label">Pending claim</div></div>
+            <div class="counter-box"><div class="counter-value" id="claimsInProgressCount">0</div><div class="counter-label">In progress</div></div>
+            <div class="counter-box highlight"><div class="counter-value" id="claimsApprovedCount">0</div><div class="counter-label">Approved</div></div>
+            <div class="counter-box"><div class="counter-value" id="claimsRejectedCount">0</div><div class="counter-label">Rejected</div></div>
+          </div>
+          <div class="info-box" style="text-align:center; margin-top:10px;">
+            <div style="font-size:11px; color:var(--text-secondary);">Total reimbursement (approved)</div>
+            <div style="font-size:24px; font-weight:600; color:var(--success);">₹<span id="claimsTotalReimbursement">0.00</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Upload claims CSV</div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">Select CSV file</label>
+            <input type="file" accept=".csv" class="form-input" id="claimsFileInput">
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary" id="downloadClaimsTemplateBtn">Download template</button>
+            <button class="btn btn-primary" id="uploadClaimsBtn" disabled>Upload claims</button>
+          </div>
+          <div id="claimsUploadProgress" class="hidden" style="margin-top:14px;">
+            <div class="progress-bar"><div class="progress-fill" id="claimsProgressBar" style="width:0%"></div></div>
+            <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;" id="claimsProgressText"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card hidden" id="claimsResultCard">
+        <div class="card-header">Upload results</div>
+        <div class="card-body">
+          <div style="display:flex; gap:16px; margin-bottom:12px; font-size:13px;">
+            <span>Total: <strong id="claimsResultTotal">0</strong></span>
+            <span style="color:var(--success);">Success: <strong id="claimsResultSuccess">0</strong></span>
+            <span style="color:var(--danger);">Failed: <strong id="claimsResultFailed">0</strong></span>
+          </div>
+          <div class="hidden" id="claimsErrorsContainer">
+            <table class="preview-table">
+              <thead><tr><th>Row</th><th>Tracking ID</th><th>Ticket ID</th><th>Error</th></tr></thead>
+              <tbody id="claimsErrorsBody"></tbody>
+            </table>
+            <button class="btn btn-secondary" style="margin-top:10px;" id="downloadClaimsErrorsBtn">Download errors</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Instructions</div>
+        <div class="card-body">
+          <table class="preview-table">
+            <tr><th>Column</th><th>Required</th><th>Description</th></tr>
+            <tr><td>tracking_id</td><td>Yes</td><td>Must exist with QC status BAD</td></tr>
+            <tr><td>ticket_id</td><td>Yes</td><td>Unique marketplace ticket reference</td></tr>
+            <tr><td>claim_status</td><td>Yes</td><td>In Progress, Approved, or Rejected</td></tr>
+            <tr><td>reimbursement_amount</td><td>Yes</td><td>Required &gt;0 for Approved, else 0</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
 
     <div class="page" id="page-uploads">
       <div class="card">
@@ -449,6 +514,7 @@
 <script src="js/qc.js"></script>
 <script src="js/users.js"></script>
 <script src="js/cbp.js"></script>
+<script src="js/claims.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
