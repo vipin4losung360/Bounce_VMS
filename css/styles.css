@@ -323,6 +323,12 @@ html, body {
 }
 .access-chip .remove-chip { cursor: pointer; color: var(--danger); font-weight: 600; }
 
+.form-hint { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+.info-box { padding: 12px; border-radius: var(--radius); background: var(--bg-page); border: 1px solid var(--border); font-size: 12px; }
+.preview-table { width: 100%; font-size: 11px; border-collapse: collapse; margin-top: 8px; }
+.preview-table th { background: var(--bg-page); padding: 6px 8px; text-align: left; font-weight: 500; }
+.preview-table td { padding: 6px 8px; border-top: 1px solid var(--border); }
+
 .progress-fill-indeterminate {
   height: 100%;
   width: 40%;
