@@ -253,6 +253,26 @@ html, body {
   border-right-color: var(--orange);
   font-weight: 500;
 }
+.nav-badge {
+  background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  margin-left: -4px;
+}
+
+.upload-row { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.upload-row:last-child { border-bottom: none; }
+.upload-row-top { display: flex; justify-content: space-between; font-size: 12px; font-family: monospace; margin-bottom: 6px; }
+.upload-status-done { color: var(--success); font-family: var(--font); display: flex; align-items: center; gap: 4px; }
+.upload-status-failed { color: var(--danger); font-family: var(--font); font-weight: 500; }
 
 .main-content { flex: 1; padding: 24px 28px; overflow-y: auto; }
 
