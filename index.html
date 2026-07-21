@@ -71,6 +71,7 @@
     <div class="nav-item" data-page="cbp"><i class="ti ti-ban"></i><span class="nav-label">CBP</span></div>
     <div class="nav-item" data-page="reports"><i class="ti ti-chart-bar"></i><span class="nav-label">Reports</span></div>
     <div class="nav-item" data-page="claims"><i class="ti ti-file-text"></i><span class="nav-label">Claims</span></div>
+    <div class="nav-item" data-page="uploads"><i class="ti ti-cloud-upload"></i><span class="nav-label">Uploads</span><span class="nav-badge hidden" id="uploadsBadge"></span></div>
   </div>
   <div class="main-content">
 
@@ -296,6 +297,15 @@
     <div class="page" id="page-reports"><div class="empty-state">Reports screen — not built yet</div></div>
     <div class="page" id="page-claims"><div class="empty-state">Claims screen — not built yet</div></div>
 
+    <div class="page" id="page-uploads">
+      <div class="card">
+        <div class="card-header">Video uploads this session</div>
+        <div class="card-body">
+          <div id="uploadsList"><div class="empty-state">No video uploads yet this session</div></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -303,6 +313,7 @@
 <script src="js/toast.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/receive.js"></script>
+<script src="js/uploadQueue.js"></script>
 <script src="js/qc.js"></script>
 <script src="js/app.js"></script>
 </body>
