@@ -140,7 +140,10 @@ function displaySkuDetails(data) {
 // ---------- Camera + continuous recording ----------
 document.getElementById("startCameraBtn").addEventListener("click", async function () {
   try {
-    QC.stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    QC.stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: { ideal: 1920 }, height: { ideal: 1080 } },
+      audio: false
+    });
   } catch (err) {
     toast("Camera access is required to start QC: " + err.message, "error");
     return;
@@ -151,7 +154,13 @@ document.getElementById("startCameraBtn").addEventListener("click", async functi
   document.getElementById("recBadge").classList.remove("hidden");
 
   QC.chunks = [];
-  QC.mediaRecorder = new MediaRecorder(QC.stream);
+  // Prefer VP9 where supported — meaningfully better compression at the
+  // same 1080p resolution, no quality trade-off. Falls back to whatever
+  // the browser defaults to (usually VP8) if VP9 isn't available.
+  const recorderOptions = MediaRecorder.isTypeSupported("video/webm;codecs=vp9")
+    ? { mimeType: "video/webm;codecs=vp9" }
+    : {};
+  QC.mediaRecorder = new MediaRecorder(QC.stream, recorderOptions);
   QC.mediaRecorder.ondataavailable = function (e) { if (e.data.size > 0) QC.chunks.push(e.data); };
   QC.mediaRecorder.start();
   QC.startedAt = Date.now();
@@ -368,29 +377,14 @@ document.getElementById("qcCancelBtn").addEventListener("click", async function 
 document.getElementById("submitQCBtn").addEventListener("click", async function () {
   const btn = this;
   btn.disabled = true;
-  btn.textContent = "Uploading video…";
+  btn.textContent = "Saving…";
 
   const blob = await stopRecordingAndGetBlob();
   stopCameraHard();
 
-  let durationSec = QC.startedAt ? Math.round((Date.now() - QC.startedAt) / 1000) : 0;
-
-  if (blob) {
-    const base64Video = await blobToBase64(blob);
-    const vr = await api("uploadVideo", {
-      itemId: QC.item.item_id,
-      videoData: base64Video,
-      fileName: QC.item.tracking_id + "_VIDEO.webm"
-    });
-    if (!vr.success) {
-      toast("Video upload failed: " + vr.error + " — you can retry Submit, the recording is still held.", "error");
-      btn.disabled = false;
-      btn.textContent = "Complete QC";
-      return;
-    }
-  }
-
-  btn.textContent = "Saving…";
+  const durationSec = QC.startedAt ? Math.round((Date.now() - QC.startedAt) / 1000) : 0;
+  const trackingId = QC.item.tracking_id;
+  const itemId = QC.item.item_id;
 
   const expectedQty = QC.expectedQty;
   let damageDetails = null;
@@ -425,7 +419,7 @@ document.getElementById("submitQCBtn").addEventListener("click", async function 
   const calculatedTag = calculateTag();
 
   const r = await api("saveQCData", {
-    itemId: QC.item.item_id,
+    itemId: itemId,
     isBoxDamaged: QC.isBoxDamaged,
     isProductGood: QC.isProductGood,
     expectedQty: expectedQty,
@@ -445,15 +439,23 @@ document.getElementById("submitQCBtn").addEventListener("click", async function 
   btn.disabled = false;
   btn.textContent = "Complete QC";
 
-  if (r.success) {
-    toast("QC complete: " + r.data.qcStatus + " (" + durationSec + "s recorded)", "success");
-    resetQCState();
-    document.getElementById("qcFormCard").classList.add("hidden");
-    document.getElementById("qcScanCard").classList.remove("hidden");
-    document.getElementById("qcScanInput").focus();
-  } else {
+  if (!r.success) {
     toast(r.error, "error");
+    return; // recording is still in memory (blob) — operator can retry Submit
   }
+
+  toast("QC complete: " + r.data.qcStatus + " (" + durationSec + "s recorded)", "success");
+
+  // Video is the slow part — queue it in the background and free the
+  // operator to scan the next item immediately. Track it on the Uploads tab.
+  if (blob) {
+    queueVideoUpload(trackingId, itemId, blob, trackingId + "_VIDEO.webm");
+  }
+
+  resetQCState();
+  document.getElementById("qcFormCard").classList.add("hidden");
+  document.getElementById("qcScanCard").classList.remove("hidden");
+  document.getElementById("qcScanInput").focus();
 });
 
 function calculateTag() {
