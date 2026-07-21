@@ -13,9 +13,32 @@ function showApp(user) {
   document.getElementById("loadingPage").classList.add("hidden");
   document.getElementById("loginPage").classList.add("hidden");
   document.getElementById("appContainer").classList.remove("hidden");
-  document.getElementById("welcomeMsg").textContent =
-    "Signed in as " + user.fullName + " (" + user.role + ")";
+
+  window.CURRENT_USER = user;
+  document.getElementById("welcomeMsg").textContent = user.fullName;
+  document.getElementById("userAvatar").textContent = (user.fullName || "?").charAt(0).toUpperCase();
+
+  applyRoleVisibility(user.role);
   loadMasterData();
+}
+
+function applyRoleVisibility(role) {
+  const usersTab = document.querySelector('.nav-item[data-page="users"]');
+  const manualScreensPTCOnly = []; // reserved for any future PTC-only tabs
+
+  if (usersTab) usersTab.classList.toggle("hidden", role !== "PTC_USER");
+
+  if (role === "VIEWER") {
+    // Viewers only see Reports, matching the original Portal's restriction.
+    ["receive", "qc", "cbp", "claims", "uploads"].forEach(function (p) {
+      const el = document.querySelector('.nav-item[data-page="' + p + '"]');
+      if (el) el.classList.add("hidden");
+    });
+    document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+    document.querySelector('.nav-item[data-page="reports"]').classList.add("active");
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById("page-reports").classList.add("active");
+  }
 }
 
 function setStatus(msg, type) {
@@ -51,6 +74,67 @@ document.getElementById("logoutBtn").addEventListener("click", async function ()
   await api("logout", {});
   clearSession();
   showLogin();
+});
+
+// ---------- User menu dropdown ----------
+document.getElementById("userMenuBtn").addEventListener("click", function (e) {
+  e.stopPropagation();
+  document.getElementById("userMenuDropdown").classList.toggle("hidden");
+});
+document.addEventListener("click", function () {
+  document.getElementById("userMenuDropdown").classList.add("hidden");
+});
+
+// ---------- Change password ----------
+document.getElementById("changePasswordMenuItem").addEventListener("click", function () {
+  document.getElementById("userMenuDropdown").classList.add("hidden");
+  document.getElementById("currentPassword").value = "";
+  document.getElementById("newPassword").value = "";
+  document.getElementById("confirmNewPassword").value = "";
+  document.getElementById("changePasswordStatus").textContent = "";
+  document.getElementById("changePasswordModal").classList.remove("hidden");
+});
+document.getElementById("changePasswordCancelBtn").addEventListener("click", function () {
+  document.getElementById("changePasswordModal").classList.add("hidden");
+});
+document.getElementById("changePasswordSaveBtn").addEventListener("click", async function () {
+  const currentPassword = document.getElementById("currentPassword").value;
+  const newPassword = document.getElementById("newPassword").value;
+  const confirmPassword = document.getElementById("confirmNewPassword").value;
+  const statusEl = document.getElementById("changePasswordStatus");
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    statusEl.textContent = "All fields are required.";
+    statusEl.className = "status-msg error";
+    return;
+  }
+  if (newPassword !== confirmPassword) {
+    statusEl.textContent = "New passwords do not match.";
+    statusEl.className = "status-msg error";
+    return;
+  }
+  if (newPassword.length < 6) {
+    statusEl.textContent = "Password must be at least 6 characters.";
+    statusEl.className = "status-msg error";
+    return;
+  }
+
+  const btn = this;
+  btn.disabled = true;
+  statusEl.textContent = "Changing…";
+  statusEl.className = "status-msg pending";
+
+  const r = await api("changePassword", { currentPassword, newPassword, confirmPassword });
+
+  btn.disabled = false;
+
+  if (r.success) {
+    toast("Password changed.", "success");
+    document.getElementById("changePasswordModal").classList.add("hidden");
+  } else {
+    statusEl.textContent = r.error || "Couldn't change password.";
+    statusEl.className = "status-msg error";
+  }
 });
 
 // ---------- Forgot password ----------
