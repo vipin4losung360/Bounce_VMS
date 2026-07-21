@@ -87,38 +87,6 @@ async function api(action, data) {
   return result;
 }
 
-// Upload with real progress reporting — fetch() can't report upload
-// progress, so this uses XMLHttpRequest instead, same endpoint and payload
-// shape as api(). Used for video uploads specifically, since that's the
-// only payload large enough for a progress bar to matter.
-function apiUpload(action, data, onProgress) {
-  return new Promise(function (resolve) {
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", WEB_APP_URL, true);
-    xhr.setRequestHeader("Content-Type", "text/plain;charset=utf-8");
-
-    xhr.upload.onprogress = function (e) {
-      if (e.lengthComputable && onProgress) {
-        onProgress(Math.round((e.loaded / e.total) * 100));
-      }
-    };
-
-    xhr.onload = function () {
-      try {
-        resolve(JSON.parse(xhr.responseText));
-      } catch (err) {
-        resolve({ success: false, error: "Couldn't parse server response." });
-      }
-    };
-
-    xhr.onerror = function () {
-      resolve({ success: false, error: "Network error during upload.", networkFailure: true });
-    };
-
-    xhr.send(JSON.stringify({ action: action, data: data || {}, sessionToken: getSessionToken() }));
-  });
-}
-
 // Public actions (login, forgotPassword) don't send a session token — the
 // backend's handleApiRequest already treats these as public, and getSessionToken()
 // returning null for a logged-out user is fine since sessionToken is simply
