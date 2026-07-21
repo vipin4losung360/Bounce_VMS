@@ -24,9 +24,10 @@ function showApp(user) {
 
 function applyRoleVisibility(role) {
   const usersTab = document.querySelector('.nav-item[data-page="users"]');
-  const manualScreensPTCOnly = []; // reserved for any future PTC-only tabs
+  const claimsTab = document.querySelector('.nav-item[data-page="claims"]');
 
   if (usersTab) usersTab.classList.toggle("hidden", role !== "PTC_USER");
+  if (claimsTab) claimsTab.classList.toggle("hidden", role !== "PTC_USER");
 
   if (role === "VIEWER") {
     // Viewers only see Reports, matching the original Portal's restriction.
