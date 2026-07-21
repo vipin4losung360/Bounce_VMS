@@ -30,18 +30,14 @@ function queueVideoUpload(trackingId, itemId, blob, fileName) {
 
 async function startUpload(entry) {
   entry.status = "uploading";
-  entry.progress = 0;
   renderUploadsTab();
 
   const base64Video = await blobToBase64(entry.blob);
 
-  const result = await apiUpload("uploadVideo", {
+  const result = await api("uploadVideo", {
     itemId: entry.itemId,
     videoData: base64Video,
     fileName: entry.fileName
-  }, function (pct) {
-    entry.progress = pct;
-    renderUploadsTab();
   });
 
   if (result.success) {
@@ -82,8 +78,8 @@ function renderUploadsTab() {
   list.innerHTML = UploadQueue.items.map(function (entry) {
     if (entry.status === "uploading") {
       return `<div class="upload-row">
-        <div class="upload-row-top"><span>${entry.trackingId}</span><span>${entry.progress}%</span></div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${entry.progress}%"></div></div>
+        <div class="upload-row-top"><span>${entry.trackingId}</span><span>Uploading…</span></div>
+        <div class="progress-bar"><div class="progress-fill-indeterminate"></div></div>
       </div>`;
     }
     if (entry.status === "done") {
