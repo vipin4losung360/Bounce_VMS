@@ -45,6 +45,17 @@
   </div>
 </div>
 
+<div class="modal-overlay hidden" id="imageViewerModal">
+  <div class="modal-box" style="max-width:520px; max-height:80vh; overflow-y:auto;">
+    <div class="modal-title">Images: <span id="imageViewerTitle">-</span></div>
+    <div id="imageViewerList" style="margin-top:10px;"></div>
+    <div style="display:flex; gap:8px; margin-top:16px;">
+      <button class="btn btn-primary" style="flex:1;" id="downloadAllImagesBtn">Download all images</button>
+      <button class="btn btn-secondary" style="flex:1;" id="closeImageViewerBtn">Close</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay hidden" id="forgotPasswordModal">
   <div class="modal-box">
     <div class="modal-title">Reset password</div>
@@ -414,7 +425,127 @@
         </div>
       </div>
     </div>
-    <div class="page" id="page-reports"><div class="empty-state">Reports screen — not built yet</div></div>
+    <div class="page" id="page-reports">
+      <div class="card">
+        <div class="card-header">Master report</div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">Search by document ID (overrides other filters)</label>
+            <input type="text" class="form-input" id="reportDocumentId" style="text-transform:uppercase;" placeholder="e.g. BNG_20260719_XQ41">
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Date from</label><input type="date" class="form-input" id="reportDateFrom"></div>
+            <div class="form-group"><label class="form-label">Date to</label><input type="date" class="form-input" id="reportDateTo"></div>
+          </div>
+
+          <div class="filter-section" id="fs-fc">
+            <div class="filter-section-header" onclick="toggleFilterSection('fs-fc')">
+              <span>Fulfillment centers <span class="filter-badge" id="badge-fc">0</span></span>
+              <i class="ti ti-chevron-down filter-arrow"></i>
+            </div>
+            <div class="filter-section-body">
+              <div class="filter-actions">
+                <button class="btn btn-secondary" onclick="selectAllFilter('fc')">Select all</button>
+                <button class="btn btn-secondary" onclick="clearAllFilter('fc')">Clear all</button>
+              </div>
+              <div class="checkbox-list" id="list-fc"></div>
+            </div>
+          </div>
+
+          <div class="filter-section" id="fs-client">
+            <div class="filter-section-header" onclick="toggleFilterSection('fs-client')">
+              <span>Clients <span class="filter-badge" id="badge-client">0</span></span>
+              <i class="ti ti-chevron-down filter-arrow"></i>
+            </div>
+            <div class="filter-section-body">
+              <div class="filter-actions">
+                <button class="btn btn-secondary" onclick="selectAllFilter('client')">Select all</button>
+                <button class="btn btn-secondary" onclick="clearAllFilter('client')">Clear all</button>
+              </div>
+              <div class="checkbox-list" id="list-client"></div>
+            </div>
+          </div>
+
+          <div class="filter-section collapsed" id="fs-qcStatus">
+            <div class="filter-section-header" onclick="toggleFilterSection('fs-qcStatus')">
+              <span>QC status <span class="filter-badge" id="badge-qcStatus">1</span></span>
+              <i class="ti ti-chevron-down filter-arrow"></i>
+            </div>
+            <div class="filter-section-body">
+              <div class="filter-actions">
+                <button class="btn btn-secondary" onclick="selectAllFilter('qcStatus')">Select all</button>
+                <button class="btn btn-secondary" onclick="clearAllFilter('qcStatus')">Clear all</button>
+              </div>
+              <div class="checkbox-list" id="list-qcStatus">
+                <label class="checkbox-item"><input type="checkbox" class="rf-check rf-qcStatus" value="ALL" checked onchange="onFilterCheck(this,'qcStatus')"> All statuses</label>
+                <label class="checkbox-item"><input type="checkbox" class="rf-check rf-qcStatus" value="PENDING" onchange="onFilterCheck(this,'qcStatus')"> Pending</label>
+                <label class="checkbox-item"><input type="checkbox" class="rf-check rf-qcStatus" value="GOOD" onchange="onFilterCheck(this,'qcStatus')"> Good</label>
+                <label class="checkbox-item"><input type="checkbox" class="rf-check rf-qcStatus" value="BAD" onchange="onFilterCheck(this,'qcStatus')"> Bad</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-section collapsed" id="fs-qcReady">
+            <div class="filter-section-header" onclick="toggleFilterSection('fs-qcReady')">
+              <span>QC ready tag <span class="filter-badge" id="badge-qcReady">1</span></span>
+              <i class="ti ti-chevron-down filter-arrow"></i>
+            </div>
+            <div class="filter-section-body">
+              <div class="filter-actions">
+                <button class="btn btn-secondary" onclick="selectAllFilter('qcReady')">Select all</button>
+                <button class="btn btn-secondary" onclick="clearAllFilter('qcReady')">Clear all</button>
+              </div>
+              <div class="checkbox-list" id="list-qcReady">
+                <label class="checkbox-item"><input type="checkbox" class="rf-check rf-qcReady" value="ALL" checked onchange="onFilterCheck(this,'qcReady')"> All</label>
+                <label class="checkbox-item"><input type="checkbox" class="rf-check rf-qcReady" value="Y" onchange="onFilterCheck(this,'qcReady')"> Y — SKU available</label>
+                <label class="checkbox-item"><input type="checkbox" class="rf-check rf-qcReady" value="N" onchange="onFilterCheck(this,'qcReady')"> N — SKU not found</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-section collapsed" id="fs-returnType">
+            <div class="filter-section-header" onclick="toggleFilterSection('fs-returnType')">
+              <span>Return type <span class="filter-badge" id="badge-returnType">1</span></span>
+              <i class="ti ti-chevron-down filter-arrow"></i>
+            </div>
+            <div class="filter-section-body">
+              <div class="filter-actions">
+                <button class="btn btn-secondary" onclick="selectAllFilter('returnType')">Select all</button>
+                <button class="btn btn-secondary" onclick="clearAllFilter('returnType')">Clear all</button>
+              </div>
+              <div class="checkbox-list" id="list-returnType">
+                <label class="checkbox-item"><input type="checkbox" class="rf-check rf-returnType" value="ALL" checked onchange="onFilterCheck(this,'returnType')"> All types</label>
+                <label class="checkbox-item"><input type="checkbox" class="rf-check rf-returnType" value="RTO" onchange="onFilterCheck(this,'returnType')"> RTO</label>
+                <label class="checkbox-item"><input type="checkbox" class="rf-check rf-returnType" value="CIR" onchange="onFilterCheck(this,'returnType')"> CIR</label>
+                <label class="checkbox-item"><input type="checkbox" class="rf-check rf-returnType" value="CBP" onchange="onFilterCheck(this,'returnType')"> CBP</label>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:8px; margin-top:14px;">
+            <button class="btn btn-primary" id="generateReportBtn">Generate report</button>
+            <button class="btn btn-secondary" id="exportReportBtn" disabled>Export Excel</button>
+            <button class="btn btn-secondary" id="clearReportFiltersBtn">Clear filters</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card hidden" id="reportResultsCard">
+        <div class="card-header">Results: <span id="reportRowCount">0</span> rows</div>
+        <div class="card-body" style="padding:0; overflow-x:auto; max-height:60vh;">
+          <table class="report-table">
+            <thead><tr>
+              <th>Document ID</th><th>Shipment report date</th><th>Shipment received date</th><th>Tracking ID timestamp</th>
+              <th>FC</th><th>Client</th><th>Marketplace</th><th>Partner</th><th>Vehicle</th><th>Claimed</th><th>Received</th>
+              <th>Tracking ID</th><th>Order ID</th><th>Return type</th><th>QC ready</th><th>QC status</th><th>Damage tag</th>
+              <th>QC at</th><th>QC by</th><th>Ticket ID</th><th>Claim status</th><th>Reimbursement</th><th>Status</th>
+              <th>Images</th><th>Video</th><th>Damage summary</th><th>POD</th>
+            </tr></thead>
+            <tbody id="reportTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
     <div class="page" id="page-claims">
       <div class="card">
         <div class="card-header">Upload claims CSV</div>
@@ -499,6 +630,7 @@
 <script src="js/users.js"></script>
 <script src="js/cbp.js"></script>
 <script src="js/claims.js"></script>
+<script src="js/reports.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
