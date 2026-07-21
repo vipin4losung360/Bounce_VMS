@@ -274,6 +274,55 @@ html, body {
 .upload-status-done { color: var(--success); font-family: var(--font); display: flex; align-items: center; gap: 4px; }
 .upload-status-failed { color: var(--danger); font-family: var(--font); font-weight: 500; }
 
+/* ---------- Users screen ---------- */
+.checkbox-list {
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px;
+}
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.checkbox-item:hover { background: var(--bg-page); }
+.checkbox-item input { accent-color: var(--orange); }
+
+.user-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+.user-card.inactive { opacity: 0.55; background: var(--bg-page); }
+.user-card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.user-card-name { font-weight: 500; font-size: 13px; }
+.user-card-username { font-size: 11px; color: var(--text-secondary); font-family: monospace; }
+.role-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+.role-badge.PTC_USER { background: #e3f2fd; color: #1565c0; }
+.role-badge.FC_USER { background: var(--orange-tint); color: var(--orange-tint-text); }
+.role-badge.VIEWER { background: #f3e5f5; color: #7b1fa2; }
+.user-card-access { font-size: 11px; color: var(--text-secondary); margin-top: 6px; }
+.user-card-actions { display: flex; gap: 6px; margin-top: 10px; }
+
+.access-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-page);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+.access-chip .remove-chip { cursor: pointer; color: var(--danger); font-weight: 600; }
+
 .progress-fill-indeterminate {
   height: 100%;
   width: 40%;
@@ -296,6 +345,50 @@ html, body {
   gap: 14px;
   margin-bottom: 18px;
 }
+
+.user-menu-wrap { position: relative; }
+.user-menu-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 12px 6px 6px;
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font);
+}
+.user-menu-btn:hover { border-color: var(--orange); }
+.user-avatar {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--orange); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; flex-shrink: 0;
+}
+.user-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(43,38,32,0.12);
+  min-width: 180px;
+  overflow: hidden;
+  z-index: 60;
+}
+.user-menu-item {
+  padding: 10px 14px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.user-menu-item:hover { background: var(--bg-page); }
+.user-menu-item.danger { color: var(--danger); }
 
 .page { display: none; }
 .page.active { display: block; }
