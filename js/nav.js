@@ -25,5 +25,6 @@ document.querySelectorAll(".nav-item").forEach(function (item) {
     document.getElementById("page-" + target).classList.add("active");
 
     if (target === "receive") loadActiveShipments();
+    if (target === "users") loadUsers();
   });
 });
