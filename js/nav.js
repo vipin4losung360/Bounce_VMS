@@ -28,5 +28,6 @@ document.querySelectorAll(".nav-item").forEach(function (item) {
     if (target === "users") loadUsers();
     if (target === "cbp") loadCBPPage();
     if (target === "claims") loadClaimsPage();
+    if (target === "reports") loadReportFilters();
   });
 });
