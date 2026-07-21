@@ -381,7 +381,39 @@
       </div>
     </div>
 
-    <div class="page" id="page-cbp"><div class="empty-state">CBP screen — not built yet</div></div>
+    <div class="page" id="page-cbp">
+      <div class="card">
+        <div class="card-header">Cancelled before pickup — upload</div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Fulfillment center</label>
+              <select class="form-input" id="cbpFC"><option value="">Select FC</option></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Client</label>
+              <select class="form-input" id="cbpClient" disabled><option value="">Select client</option></select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Marketplace</label>
+              <select class="form-input" id="cbpMarketplace" disabled><option value="">Select marketplace</option></select>
+            </div>
+            <div class="form-group"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Upload CSV</label>
+            <input type="file" accept=".csv" class="form-input" id="cbpFileInput">
+            <div class="form-hint">Columns needed: tracking_id, order_id, SKUCode, ItemName, Quantity</div>
+          </div>
+          <div class="hidden" id="cbpPreview">
+            <div class="info-box" id="cbpPreviewText" style="margin-bottom:12px;"></div>
+          </div>
+          <button class="btn btn-primary btn-full" id="cbpSubmitBtn">Submit CBP upload</button>
+        </div>
+      </div>
+    </div>
     <div class="page" id="page-reports"><div class="empty-state">Reports screen — not built yet</div></div>
     <div class="page" id="page-claims"><div class="empty-state">Claims screen — not built yet</div></div>
 
@@ -416,6 +448,7 @@
 <script src="js/uploadQueue.js"></script>
 <script src="js/qc.js"></script>
 <script src="js/users.js"></script>
+<script src="js/cbp.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
