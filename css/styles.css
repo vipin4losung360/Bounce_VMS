@@ -274,6 +274,19 @@ html, body {
 .upload-status-done { color: var(--success); font-family: var(--font); display: flex; align-items: center; gap: 4px; }
 .upload-status-failed { color: var(--danger); font-family: var(--font); font-weight: 500; }
 
+.progress-fill-indeterminate {
+  height: 100%;
+  width: 40%;
+  background: var(--orange);
+  border-radius: 3px;
+  animation: indeterminate 1.2s ease-in-out infinite;
+}
+@keyframes indeterminate {
+  0% { margin-left: 0%; width: 20%; }
+  50% { margin-left: 40%; width: 40%; }
+  100% { margin-left: 100%; width: 20%; }
+}
+
 .main-content { flex: 1; padding: 24px 28px; overflow-y: auto; }
 
 .topbar {
