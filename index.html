@@ -61,6 +61,83 @@
   </div>
 </div>
 
+<div class="modal-overlay hidden" id="userModal">
+  <div class="modal-box" style="max-width:440px; max-height:85vh; overflow-y:auto;">
+    <div class="modal-title" id="userModalTitle">Add user</div>
+    <input type="hidden" id="editUserId">
+
+    <div class="form-group">
+      <label class="form-label" for="userUsername">Username</label>
+      <input type="text" class="form-input" id="userUsername">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="userFullName">Full name</label>
+      <input type="text" class="form-input" id="userFullName">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="userEmail">Email</label>
+      <input type="email" class="form-input" id="userEmail">
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="userPasswordLabel" for="userPassword">Password</label>
+      <input type="password" class="form-input" id="userPassword">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="userRole">Role</label>
+      <select class="form-input" id="userRole">
+        <option value="">Select role</option>
+        <option value="PTC_USER">Admin (PTC user)</option>
+        <option value="FC_USER">FC user</option>
+        <option value="VIEWER">Viewer (client user)</option>
+      </select>
+    </div>
+
+    <div class="form-group hidden" id="fcSelectionGroup">
+      <label class="form-label">Assign FCs</label>
+      <div class="checkbox-list" id="fcCheckboxList"></div>
+    </div>
+
+    <div class="form-group hidden" id="viewerAccessGroup">
+      <label class="form-label">Client access</label>
+      <select class="form-input" id="viewerClientSelect" style="margin-bottom:8px;">
+        <option value="">Select client</option>
+      </select>
+      <div class="hidden" id="viewerFCSection">
+        <div class="checkbox-list" id="viewerFCCheckboxList" style="max-height:140px;"></div>
+        <button class="btn btn-secondary btn-full" style="margin-top:8px;" id="addViewerAccessBtn">+ Add client access</button>
+      </div>
+      <div id="viewerAccessList" style="margin-top:10px;"></div>
+    </div>
+
+    <div style="display:flex; gap:8px; margin-top:16px;">
+      <button class="btn btn-secondary" style="flex:1;" id="userModalCancelBtn">Cancel</button>
+      <button class="btn btn-primary" style="flex:1;" id="userModalSaveBtn">Save</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay hidden" id="changePasswordModal">
+  <div class="modal-box">
+    <div class="modal-title">Change password</div>
+    <div class="form-group">
+      <label class="form-label" for="currentPassword">Current password</label>
+      <input type="password" class="form-input" id="currentPassword">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="newPassword">New password</label>
+      <input type="password" class="form-input" id="newPassword">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="confirmNewPassword">Confirm new password</label>
+      <input type="password" class="form-input" id="confirmNewPassword">
+    </div>
+    <div class="status-msg" id="changePasswordStatus"></div>
+    <div style="display:flex; gap:8px; margin-top:16px;">
+      <button class="btn btn-secondary" style="flex:1;" id="changePasswordCancelBtn">Cancel</button>
+      <button class="btn btn-primary" style="flex:1;" id="changePasswordSaveBtn">Change password</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast-container" id="toastContainer"></div>
 
 <div class="app-container hidden" id="appContainer">
@@ -72,12 +149,22 @@
     <div class="nav-item" data-page="reports"><i class="ti ti-chart-bar"></i><span class="nav-label">Reports</span></div>
     <div class="nav-item" data-page="claims"><i class="ti ti-file-text"></i><span class="nav-label">Claims</span></div>
     <div class="nav-item" data-page="uploads"><i class="ti ti-cloud-upload"></i><span class="nav-label">Uploads</span><span class="nav-badge hidden" id="uploadsBadge"></span></div>
+    <div class="nav-item hidden" data-page="users"><i class="ti ti-users"></i><span class="nav-label">Users</span></div>
   </div>
   <div class="main-content">
 
     <div class="topbar">
-      <span id="welcomeMsg" style="font-size:13px; color:var(--text-secondary);"></span>
-      <button class="btn btn-secondary" id="logoutBtn" style="min-height:32px; padding:6px 14px;">Log out</button>
+      <div class="user-menu-wrap" id="userMenuWrap">
+        <button class="user-menu-btn" id="userMenuBtn">
+          <span class="user-avatar" id="userAvatar">-</span>
+          <span id="welcomeMsg"></span>
+          <i class="ti ti-chevron-down" style="font-size:14px;"></i>
+        </button>
+        <div class="user-menu-dropdown hidden" id="userMenuDropdown">
+          <div class="user-menu-item" id="changePasswordMenuItem"><i class="ti ti-key"></i> Change password</div>
+          <div class="user-menu-item danger" id="logoutBtn"><i class="ti ti-logout"></i> Log out</div>
+        </div>
+      </div>
     </div>
 
     <div class="page active" id="page-receive">
@@ -307,6 +394,18 @@
       </div>
     </div>
 
+    <div class="page" id="page-users">
+      <div class="card">
+        <div class="card-header">
+          <span>User management</span>
+          <button class="btn btn-primary" id="addUserBtn" style="min-height:30px; padding:6px 14px;">+ Add user</button>
+        </div>
+        <div class="card-body">
+          <div id="userList"><div class="empty-state">Loading users…</div></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -316,6 +415,7 @@
 <script src="js/receive.js"></script>
 <script src="js/uploadQueue.js"></script>
 <script src="js/qc.js"></script>
+<script src="js/users.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
