@@ -39,6 +39,7 @@ function applyRoleVisibility(role) {
     document.querySelector('.nav-item[data-page="reports"]').classList.add("active");
     document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
     document.getElementById("page-reports").classList.add("active");
+    loadReportFilters();
   }
 }
 
