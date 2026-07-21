@@ -199,6 +199,10 @@ document.getElementById("startCameraBtn").addEventListener("click", async functi
     : {};
   QC.mediaRecorder = new MediaRecorder(QC.canvasStream, recorderOptions);
   QC.mediaRecorder.ondataavailable = function (e) { if (e.data.size > 0) QC.chunks.push(e.data); };
+  QC.mediaRecorder.onerror = function (e) {
+    console.error("MediaRecorder error:", e.error || e);
+    toast("Recording error: " + (e.error ? e.error.message : "unknown") + " — this QC's video will be missing.", "error");
+  };
   QC.mediaRecorder.start();
   QC.startedAt = Date.now();
 
