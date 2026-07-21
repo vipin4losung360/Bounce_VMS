@@ -6,22 +6,10 @@ const CLAIMS_CHUNK_SIZE = 200;
 const Claims = { csvData: [], uploadErrors: [] };
 
 async function loadClaimsPage() {
-  await refreshClaimsSummary();
   document.getElementById("claimsFileInput").value = "";
   document.getElementById("uploadClaimsBtn").disabled = true;
   document.getElementById("claimsUploadProgress").classList.add("hidden");
   Claims.csvData = [];
-}
-
-async function refreshClaimsSummary() {
-  const r = await api("getClaimsSummary", {});
-  if (!r.success) return;
-  document.getElementById("claimsPendingCount").textContent = r.data.pending_claim || 0;
-  document.getElementById("claimsInProgressCount").textContent = r.data.in_progress || 0;
-  document.getElementById("claimsApprovedCount").textContent = r.data.approved || 0;
-  document.getElementById("claimsRejectedCount").textContent = r.data.rejected || 0;
-  document.getElementById("claimsTotalReimbursement").textContent =
-    (r.data.total_reimbursement || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function parseCSVLine(line) {
@@ -120,7 +108,6 @@ document.getElementById("uploadClaimsBtn").addEventListener("click", async funct
   }
 
   toast(successful + " claims uploaded" + (failed ? ", " + failed + " failed" : ""), failed ? "error" : "success");
-  refreshClaimsSummary();
 });
 
 document.getElementById("downloadClaimsTemplateBtn").addEventListener("click", function () {
