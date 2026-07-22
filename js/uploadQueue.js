@@ -9,7 +9,7 @@
 // accurate progress percentage (not an indeterminate bar).
 // ============================================================================
 
-const VIDEO_CHUNK_SIZE = 800 * 1024; // 800KB raw bytes per chunk (~1.06MB base64)
+const VIDEO_CHUNK_SIZE = 4 * 1024 * 1024; // 4MB raw bytes per chunk (~5.3MB base64)
 
 const UploadQueue = {
   items: []   // { id, trackingId, itemId, documentId, status, progress, blob, fileName }
