@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BOUNCE - Returns Management Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -154,13 +153,13 @@
 <div class="app-container hidden" id="appContainer">
   <div class="sidebar" id="sidebar">
     <div class="sidebar-logo"><span class="logo-full">B<span>O</span>UNCE</span><span class="logo-icon">B</span></div>
-    <div class="nav-item active" data-page="receive"><i class="ti ti-truck-delivery"></i><span class="nav-label">Receive</span></div>
-    <div class="nav-item" data-page="qc"><i class="ti ti-checkbox"></i><span class="nav-label">QC</span></div>
-    <div class="nav-item" data-page="cbp"><i class="ti ti-ban"></i><span class="nav-label">CBP</span></div>
-    <div class="nav-item" data-page="reports"><i class="ti ti-chart-bar"></i><span class="nav-label">Reports</span></div>
-    <div class="nav-item hidden" data-page="claims"><i class="ti ti-file-text"></i><span class="nav-label">Claims</span></div>
-    <div class="nav-item" data-page="uploads"><i class="ti ti-cloud-upload"></i><span class="nav-label">Uploads</span><span class="nav-badge hidden" id="uploadsBadge"></span></div>
-    <div class="nav-item hidden" data-page="users"><i class="ti ti-users"></i><span class="nav-label">Users</span></div>
+    <div class="nav-item active" data-page="receive"><span class="icon" data-icon="truck"></span><span class="nav-label">Receive</span></div>
+    <div class="nav-item" data-page="qc"><span class="icon" data-icon="checkbox"></span><span class="nav-label">QC</span></div>
+    <div class="nav-item" data-page="cbp"><span class="icon" data-icon="ban"></span><span class="nav-label">CBP</span></div>
+    <div class="nav-item" data-page="reports"><span class="icon" data-icon="chart"></span><span class="nav-label">Reports</span></div>
+    <div class="nav-item hidden" data-page="claims"><span class="icon" data-icon="file"></span><span class="nav-label">Claims</span></div>
+    <div class="nav-item" data-page="uploads"><span class="icon" data-icon="upload"></span><span class="nav-label">Uploads</span><span class="nav-badge hidden" id="uploadsBadge"></span></div>
+    <div class="nav-item hidden" data-page="users"><span class="icon" data-icon="users"></span><span class="nav-label">Users</span></div>
   </div>
   <div class="main-content">
 
@@ -169,11 +168,11 @@
         <button class="user-menu-btn" id="userMenuBtn">
           <span class="user-avatar" id="userAvatar">-</span>
           <span id="welcomeMsg"></span>
-          <i class="ti ti-chevron-down" style="font-size:14px;"></i>
+          <span class="icon" data-icon="chevron-down" style="font-size:14px;"></span>
         </button>
         <div class="user-menu-dropdown hidden" id="userMenuDropdown">
-          <div class="user-menu-item" id="changePasswordMenuItem"><i class="ti ti-key"></i> Change password</div>
-          <div class="user-menu-item danger" id="logoutBtn"><i class="ti ti-logout"></i> Log out</div>
+          <div class="user-menu-item" id="changePasswordMenuItem"><span class="icon" data-icon="key"></span> Change password</div>
+          <div class="user-menu-item danger" id="logoutBtn"><span class="icon" data-icon="logout"></span> Log out</div>
         </div>
       </div>
     </div>
@@ -320,10 +319,10 @@
 
               <div class="qc-item hidden" id="stepItem-label" data-step="label">
                 <div class="qc-item-header" onclick="toggleStep('label')">
-                  <span class="qc-item-check" id="check-label"><i class="ti ti-circle-dashed"></i></span>
+                  <span class="qc-item-check" id="check-label"><span class="icon" data-icon="circle-dashed"></span></span>
                   <span class="qc-item-title">Capture product label</span>
                   <span class="qc-item-summary" id="summary-label"></span>
-                  <i class="ti ti-chevron-down qc-chevron"></i>
+                  <span class="icon qc-chevron" data-icon="chevron-down"></span>
                 </div>
                 <div class="qc-item-body collapsed" id="body-label">
                   <button class="btn btn-secondary btn-full" id="captureLabelBtn">Capture label</button>
@@ -333,10 +332,10 @@
 
               <div class="qc-item hidden" id="stepItem-product" data-step="product">
                 <div class="qc-item-header" onclick="toggleStep('product')">
-                  <span class="qc-item-check" id="check-product"><i class="ti ti-circle-dashed"></i></span>
+                  <span class="qc-item-check" id="check-product"><span class="icon" data-icon="circle-dashed"></span></span>
                   <span class="qc-item-title">Product condition</span>
                   <span class="qc-item-summary" id="summary-product"></span>
-                  <i class="ti ti-chevron-down qc-chevron"></i>
+                  <span class="icon qc-chevron" data-icon="chevron-down"></span>
                 </div>
                 <div class="qc-item-body collapsed" id="body-product">
                   <div class="qc-toggle">
@@ -348,10 +347,10 @@
 
               <div class="qc-item hidden" id="stepItem-reasons" data-step="reasons">
                 <div class="qc-item-header" onclick="toggleStep('reasons')">
-                  <span class="qc-item-check" id="check-reasons"><i class="ti ti-circle-dashed"></i></span>
+                  <span class="qc-item-check" id="check-reasons"><span class="icon" data-icon="circle-dashed"></span></span>
                   <span class="qc-item-title">Damage reasons</span>
                   <span class="qc-item-summary" id="summary-reasons"></span>
-                  <i class="ti ti-chevron-down qc-chevron"></i>
+                  <span class="icon qc-chevron" data-icon="chevron-down"></span>
                 </div>
                 <div class="qc-item-body collapsed" id="body-reasons">
                   <div id="damageReasonsList"></div>
@@ -361,10 +360,10 @@
 
               <div class="qc-item hidden" id="stepItem-photos" data-step="photos">
                 <div class="qc-item-header" onclick="toggleStep('photos')">
-                  <span class="qc-item-check" id="check-photos"><i class="ti ti-circle-dashed"></i></span>
+                  <span class="qc-item-check" id="check-photos"><span class="icon" data-icon="circle-dashed"></span></span>
                   <span class="qc-item-title">Condition photos</span>
                   <span class="qc-item-summary" id="summary-photos"></span>
-                  <i class="ti ti-chevron-down qc-chevron"></i>
+                  <span class="icon qc-chevron" data-icon="chevron-down"></span>
                 </div>
                 <div class="qc-item-body collapsed" id="body-photos">
                   <button class="btn btn-secondary btn-full" id="capturePhotoBtn">Capture photo</button>
@@ -374,10 +373,10 @@
 
               <div class="qc-item hidden" id="stepItem-qty" data-step="qty">
                 <div class="qc-item-header" onclick="toggleStep('qty')">
-                  <span class="qc-item-check" id="check-qty"><i class="ti ti-circle-dashed"></i></span>
+                  <span class="qc-item-check" id="check-qty"><span class="icon" data-icon="circle-dashed"></span></span>
                   <span class="qc-item-title">Quantity breakdown</span>
                   <span class="qc-item-summary" id="summary-qty"></span>
-                  <i class="ti ti-chevron-down qc-chevron"></i>
+                  <span class="icon qc-chevron" data-icon="chevron-down"></span>
                 </div>
                 <div class="qc-item-body collapsed" id="body-qty">
                   <div id="qtyBreakdownList"></div>
@@ -441,7 +440,7 @@
           <div class="filter-section" id="fs-fc">
             <div class="filter-section-header" onclick="toggleFilterSection('fs-fc')">
               <span>Fulfillment centers <span class="filter-badge" id="badge-fc">0</span></span>
-              <i class="ti ti-chevron-down filter-arrow"></i>
+              <span class="icon filter-arrow" data-icon="chevron-down"></span>
             </div>
             <div class="filter-section-body">
               <div class="filter-actions">
@@ -455,7 +454,7 @@
           <div class="filter-section" id="fs-client">
             <div class="filter-section-header" onclick="toggleFilterSection('fs-client')">
               <span>Clients <span class="filter-badge" id="badge-client">0</span></span>
-              <i class="ti ti-chevron-down filter-arrow"></i>
+              <span class="icon filter-arrow" data-icon="chevron-down"></span>
             </div>
             <div class="filter-section-body">
               <div class="filter-actions">
@@ -469,7 +468,7 @@
           <div class="filter-section collapsed" id="fs-qcStatus">
             <div class="filter-section-header" onclick="toggleFilterSection('fs-qcStatus')">
               <span>QC status <span class="filter-badge" id="badge-qcStatus">1</span></span>
-              <i class="ti ti-chevron-down filter-arrow"></i>
+              <span class="icon filter-arrow" data-icon="chevron-down"></span>
             </div>
             <div class="filter-section-body">
               <div class="filter-actions">
@@ -488,7 +487,7 @@
           <div class="filter-section collapsed" id="fs-qcReady">
             <div class="filter-section-header" onclick="toggleFilterSection('fs-qcReady')">
               <span>QC ready tag <span class="filter-badge" id="badge-qcReady">1</span></span>
-              <i class="ti ti-chevron-down filter-arrow"></i>
+              <span class="icon filter-arrow" data-icon="chevron-down"></span>
             </div>
             <div class="filter-section-body">
               <div class="filter-actions">
@@ -506,7 +505,7 @@
           <div class="filter-section collapsed" id="fs-returnType">
             <div class="filter-section-header" onclick="toggleFilterSection('fs-returnType')">
               <span>Return type <span class="filter-badge" id="badge-returnType">1</span></span>
-              <i class="ti ti-chevron-down filter-arrow"></i>
+              <span class="icon filter-arrow" data-icon="chevron-down"></span>
             </div>
             <div class="filter-section-body">
               <div class="filter-actions">
@@ -531,7 +530,7 @@
       </div>
 
       <div class="card hidden" id="reportResultsCard">
-        <div class="card-header">Results: <span id="reportRowCount">0</span> rows</div>
+        <div class="card-header"><span>Results: <span id="reportRowCount">0</span> rows</span></div>
         <div class="card-body" style="padding:0; overflow-x:auto; max-height:60vh;">
           <table class="report-table">
             <thead><tr>
@@ -621,8 +620,10 @@
   </div>
 </div>
 
+<script src="js/icons.js"></script>
 <script src="js/api.js"></script>
 <script src="js/toast.js"></script>
+<script src="js/icons.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/receive.js"></script>
 <script src="js/uploadQueue.js"></script>
