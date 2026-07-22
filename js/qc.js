@@ -73,13 +73,13 @@ function toggleStep(name) {
 
 function markDone(name, summaryText) {
   document.getElementById("stepItem-" + name).classList.add("done");
-  document.getElementById("check-" + name).innerHTML = '<i class="ti ti-circle-check-filled"></i>';
+  document.getElementById("check-" + name).innerHTML = ICONS["circle-check"];
   document.getElementById("summary-" + name).textContent = summaryText;
 }
 
 function markPending(name) {
   document.getElementById("stepItem-" + name).classList.remove("done");
-  document.getElementById("check-" + name).innerHTML = '<i class="ti ti-circle-dashed"></i>';
+  document.getElementById("check-" + name).innerHTML = ICONS["circle-dashed"];
   document.getElementById("summary-" + name).textContent = "";
 }
 
@@ -285,7 +285,7 @@ document.getElementById("captureLabelBtn").addEventListener("click", async funct
   btn.disabled = false;
   if (ok) {
     document.getElementById("labelThumb").innerHTML =
-      `<div class="snap-thumb"><img src="${base64}"><button class="snap-remove" onclick="removeLabel()"><i class="ti ti-x"></i></button></div>`;
+      `<div class="snap-thumb"><img src="${base64}"><button class="snap-remove" onclick="removeLabel()">${ICONS.x}</button></div>`;
     markDone("label", "Captured");
     unlockStep("product");
     openStep("product");
@@ -331,7 +331,7 @@ document.getElementById("capturePhotoBtn").addEventListener("click", async funct
   const ok = await uploadSnapshot(type, base64);
   if (ok) {
     document.getElementById("pstrip-" + type).innerHTML =
-      `<img src="${base64}"><button class="snap-remove" onclick="removeStripSnapshot('${type}')"><i class="ti ti-x"></i></button>`;
+      `<img src="${base64}"><button class="snap-remove" onclick="removeStripSnapshot('${type}')">${ICONS.x}</button>`;
   }
   updateCaptureBtnLabel();
 
@@ -518,7 +518,7 @@ document.getElementById("submitQCBtn").addEventListener("click", async function 
       if (typeof queueVideoUpload !== "function") {
         throw new Error("Upload queue isn't loaded (js/uploadQueue.js missing or failed to load).");
       }
-      queueVideoUpload(trackingId, itemId, blob, trackingId + "_VIDEO.webm");
+      queueVideoUpload(trackingId, itemId, QC.item.document_id, blob, trackingId + "_VIDEO.webm");
     } else {
       toast("No video was captured for this QC — nothing to upload. Check the recording next time.", "error");
     }
@@ -576,7 +576,7 @@ function resetQCState() {
     item.classList.add("hidden");
     item.classList.remove("done", "active");
     document.getElementById("body-" + s).classList.add("collapsed");
-    document.getElementById("check-" + s).innerHTML = '<i class="ti ti-circle-dashed"></i>';
+    document.getElementById("check-" + s).innerHTML = ICONS["circle-dashed"];
     document.getElementById("summary-" + s).textContent = "";
   });
   document.getElementById("submitQCBtn").classList.add("hidden");
