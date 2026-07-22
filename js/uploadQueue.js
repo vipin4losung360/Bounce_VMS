@@ -119,7 +119,7 @@ function renderUploadsTab() {
     }
     if (entry.status === "done") {
       return `<div class="upload-row">
-        <div class="upload-row-top"><span>${entry.trackingId}</span><span class="upload-status-done"><i class="ti ti-circle-check-filled"></i> Uploaded</span></div>
+        <div class="upload-row-top"><span>${entry.trackingId}</span><span class="upload-status-done">${ICONS["circle-check"]} Uploaded</span></div>
       </div>`;
     }
     return `<div class="upload-row">
